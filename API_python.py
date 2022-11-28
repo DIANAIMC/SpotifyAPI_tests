@@ -1,4 +1,5 @@
 import requests
+import time
 
 #Credenciales de Spotify
 CLIENT_ID = 'af1707ed062448f9aa96ffd1b36737ac'
@@ -49,3 +50,5 @@ inicio = time.time()
 print((get_artist1(ACCESS_TOKEN,200)))
 fin = time.time()
 print("Ejecución del programa en minutos: ", (fin-inicio)/60)
+
+# Referencia: https://github.com/imdadahad/spotify-get-current-playing-track/blob/master/main.py
