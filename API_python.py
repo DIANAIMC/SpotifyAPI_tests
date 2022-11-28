@@ -45,4 +45,7 @@ def get_artist1(access_token,total):
         offset += 1
     return artists
 
-print((get_artist1(ACCESS_TOKEN,10)))
+inicio = time.time()
+print((get_artist1(ACCESS_TOKEN,200)))
+fin = time.time()
+print("Ejecución del programa en minutos: ", (fin-inicio)/60)
