@@ -1,4 +1,4 @@
-#+Authors: Diana Muñoz, Mariano Alcaraz, Sebastián Murillo
+#+Author: Diana Muñoz @DIANAIMC, Mariano Alcaraz @MarianoAlcarazAguilar, Sebastián Murillo @S-murilloG
 
 # SpotifyAPI_tests
 Proyecto Final: Bases de Datos No Relacionales
