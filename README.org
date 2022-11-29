@@ -16,6 +16,7 @@ Aquí poner lo que ponga el profe :)
     - Reducir el tiempo de ejecución (extraer 500 datos de cada objeto nos cuesta 3.5 minutos)
     - Ver porqué al extraer los objetos individualmente si permite hasta 500, pero en conjunto máximo 200 de c/u
     - ¿Podemos lograr meter 1000 de cada uno?
+    - Averiguar si hay repetidos, si sí, eliminarlos
     - Verificar que si se incerten correctamente los datos a Mongo
 **** Insertar datos de Mongo a Monet
 **** Insertar datos de Monet (o Mongo) a Neo4j
