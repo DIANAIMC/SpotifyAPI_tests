@@ -18,5 +18,6 @@ Aquí poner lo que ponga el profe :)
     - ¿Podemos lograr meter 1000 de cada uno?
     - Averiguar si hay repetidos, si sí, eliminarlos
     - Verificar que si se incerten correctamente los datos a Mongo
+    - Hacer 3 queries
 **** Insertar datos de Mongo a Monet
 **** Insertar datos de Monet (o Mongo) a Neo4j
