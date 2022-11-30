@@ -33,20 +33,23 @@ def get_data(access_token, lista, limite, year, type):
          break
    return lista
 
+anio_inicio = 2000
+anio_fin = 2023
+
 print('Obteniendo artistas')
 artistas = []
-for year in range(2000,2022):
+for year in range(anio_inicio, anio_fin):
    artistas = get_data(ACCESS_TOKEN, artistas, 1000, year, 'artist')
 print(len(artistas))
 
 print('\nObteniendo albums')
 albums = []
-for year in range(2000,2022):
+for year in range(anio_inicio, anio_fin):
    albums = get_data(ACCESS_TOKEN, albums, 1000, year, 'album')
 print(len(albums))
 
 print('\nObteniendo tracks')
 tracks = []
-for year in range(2000,2022):
+for year in range(anio_inicio, anio_fin):
    tracks = get_data(ACCESS_TOKEN, tracks, 1000, year, 'track')
 print(len(tracks))
