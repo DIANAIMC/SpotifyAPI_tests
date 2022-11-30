@@ -34,7 +34,7 @@ def get_data(access_token, lista, limite, year, type):
          break
    return lista
 
-anio_inicio = 2000
+anio_inicio = 2020
 anio_fin = 2023
 
 print('Obteniendo artistas')
