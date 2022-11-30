@@ -13,10 +13,10 @@ Aquí poner lo que ponga el profe :)
 **** Insertar datos de una API pública a Mongo
   - Obtener datos de la API de Spotify
     - Revisar cómo obtener el token dentro del script
-    - Reducir el tiempo de ejecución (extraer 500 datos de cada objeto nos cuesta 3.5 minutos)
-    - Ver porqué al extraer los objetos individualmente si permite hasta 500, pero en conjunto máximo 200 de c/u
-    - ¿Podemos lograr meter 1000 de cada uno?
-    - Averiguar si hay repetidos, si sí, eliminarlos
+    - ~~Reducir el tiempo de ejecución (extraer 500 datos de cada objeto nos cuesta 3.5 minutos)~~
+    - ~~Ver porqué al extraer los objetos individualmente si permite hasta 500, pero en conjunto máximo 200 de c/u~~
+    - ~~¿Podemos lograr meter 1000 de cada uno?~~
+    - ~~Averiguar si hay repetidos, si sí, eliminarlos~~
     - Verificar que si se incerten correctamente los datos a Mongo
     - Hacer 3 queries
 **** Insertar datos de Mongo a Monet
