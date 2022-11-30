@@ -39,17 +39,20 @@ anio_fin = 2023
 print('Obteniendo artistas')
 artistas = []
 for year in range(anio_inicio, anio_fin):
+   print(f'Año {year}')
    artistas = get_data(ACCESS_TOKEN, artistas, 1000, year, 'artist')
 print(len(artistas))
 
 print('\nObteniendo albums')
 albums = []
 for year in range(anio_inicio, anio_fin):
+   print(f'Año {year}')
    albums = get_data(ACCESS_TOKEN, albums, 1000, year, 'album')
 print(len(albums))
 
 print('\nObteniendo tracks')
 tracks = []
 for year in range(anio_inicio, anio_fin):
+   print(f'Año {year}')
    tracks = get_data(ACCESS_TOKEN, tracks, 1000, year, 'track')
 print(len(tracks))
