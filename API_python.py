@@ -1,6 +1,7 @@
 import requests
 import time
 from pymongo import MongoClient
+from iteration_utilities import unique_everseen
 
 """
     EXTRACCIÓN DE DATOS A PARTIR DE UNA API
@@ -73,12 +74,19 @@ def get_track(access_token,total,anio):
 
 def extrae_api(size=1000):
     inicio = time.time()
-    for anio in range(1990,2023):
-        artist = get_artist(ACCESS_TOKEN,size,anio)
-        album = get_album(ACCESS_TOKEN,size,anio)
-        track = get_track(ACCESS_TOKEN,size,anio)
+    artist = []
+    album = []
+    track = []
+    for anio in range(2020,2023):
+        artist.extend(get_artist(ACCESS_TOKEN,size,anio))
+        album.extend(get_album(ACCESS_TOKEN,size,anio))
+        track.extend(get_track(ACCESS_TOKEN,size,anio))
+    artist_final = list(unique_everseen(artist))
+    album_final = list(unique_everseen(album))
+    track_final = list(unique_everseen(track))
     fin = time.time()
-    print(f"Ejecución del programa en minutos: {(fin-inicio)/60} \nTamaños de: \nArtistas {len(artist)} \nAlbums {len(album)} \nTrack {len(track)}")
+    print(f"Ejecución del programa en minutos: {(fin-inicio)/60} \nTamaños de: \nArtistas {len(artist)}, {len(artist_final)} \nAlbums {len(album)},{len(album_final)} \nTrack {len(track)}, {len(track_final)}")
+        
         
 
 """
