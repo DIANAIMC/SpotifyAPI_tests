@@ -3,6 +3,8 @@ import time
 from pymongo import MongoClient
 from iteration_utilities import unique_everseen
 
+inicio = time.time()
+
 ACCESS_TOKEN = 'BQA4xzbXSIP_yIpiZ6aXxE9VHKd0cZszTJr_mSZsy5wVkdD7Hcud8_dSnakjhISx_F8FYEitly-AVKZRtsh6P8sIzgEJrV69ylX5ONp8bZxwVIMRZ2GN78rWBvoQ0WPO0BH1rHlXcz6FOKO168O42t9__ljjIpmlIsl9yJoJvFE_9rko'
 
 '''
@@ -34,7 +36,7 @@ def get_data(access_token, lista, limite, year, type):
          break
    return lista
 
-anio_inicio = 2020
+anio_inicio = 2010
 anio_fin = 2023
 
 print('Obteniendo artistas')
@@ -66,3 +68,8 @@ for year in range(anio_inicio, anio_fin):
 tracks_final = list(unique_everseen(tracks))
 print(f'Previo a limpieza: {len(tracks)}')
 print(f'Posterior a limpieza: {len(tracks_final)}')
+
+
+fin = time.time()
+print(f"Ejecución del programa en minutos: {(fin-inicio)/60}")
+        
