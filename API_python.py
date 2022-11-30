@@ -1,86 +1,85 @@
 import requests
 import time
+from pymongo import MongoClient
 
 """
     EXTRACCIÓN DE DATOS A PARTIR DE UNA API
 
 """
 
-#Token de autenticación para los GET. Nota: Hay que automatizar generar un token en cada ejecución porque los tokens caducan después de cierto tiempo 
-# y tenemos que andarlo cambiando manualmente.
-ACCESS_TOKEN = 'BQCRhrP7ri9VTAsnLMrYn1SEuqHJvaI3KC8hsYBQEP0_jc_zTAKncfMaiqlntylT1IW9QoynbnQT8kFV_uVou0YY-ucI2_i_8T4qOOXw3iaPvFaW2g1Cun94mWXwQg7Acq-N0gTTNfyYfBoqfsWlASKfFyoLOCpTl-Tty71_VQ5cHRJMQl4UY7PFGz-mE1LXdd0'
-
-"""
-    En los siguientes métodos extraemos artistas, canciones y albumes de Spotify (aquellos que contienen una A) de 1 en 1 hasta el "total" y los agrega a la lista con su nombre, posteriormente usaremos
-    dichas listas para insertar los datos en Mongo.
-    Input:
-        access_token: Autenticación necesaria para el request
-        total: cantidad de artistas que queremos extraer. Nota: solo hay aproximadamente 10,000 artistas
-"""
-def get_artist(access_token,total):
+ACCESS_TOKEN = 'BQDcOzPmFNy9k5-jIvMZVTDOi5MFwo7XHI5mUCzV-RUfUjYoh2UIInfRFcqL6zKElF-6A8XVW5DvRFDewOYjr9wP0PNvp0_V2LwJfShgWV-_5VF3TW9F_NHo5SpUz9yH_BQjAOz3qWNwEaxcujXAuzHEvgCcVN3vPSCb95Ih2k4uSEwXkZUwyoJmi2V1S7ibYg4'
+def get_artist(access_token,total,anio):
     artists = []
     offset=0
-    limit=1
-    for i in range(total):
+    limit=50
+    for i in range(round(total/50)):
         response = requests.get(
-            f'https://api.spotify.com/v1/search?q=A&type=artist&limit={limit}&offset={offset}',
+            f'https://api.spotify.com/v1/search?q=year%3A{anio}&type=artist&limit={limit}&offset={offset}',
             headers={
                 "Authorization": f"Bearer {access_token}",
                 'Content-Type': 'application/json'
             }
         )
         json_resp = response.json()
-        current_artist_info = json_resp["artists"]['items'][0]
-        del current_artist_info["images"]
-        artists.append(current_artist_info)
-        offset += 1
+        if "artists" in list(json_resp.keys()):
+            current_artist_info = json_resp["artists"]['items']
+            artists.extend(current_artist_info)
+            offset += 50
+        else:
+            break
     return artists
 
-def get_album(access_token,total):
+def get_album(access_token,total,anio):
     albums = []
     offset=0
-    limit=1
-    for i in range(total):
+    limit=50
+    for i in range(round(total/50)):
         response = requests.get(
-            f'https://api.spotify.com/v1/search?q=A&type=album&limit={limit}&offset={offset}',
+            f'https://api.spotify.com/v1/search?q=year%3A{anio}&type=album&limit={limit}&offset={offset}',
             headers={
                 "Authorization": f"Bearer {access_token}",
                 'Content-Type': 'application/json'
             }
         )
         json_resp = response.json()
-        current_album_info = json_resp["albums"]["items"][0]
-        del current_album_info["images"]
-        albums.append(current_album_info)
-        offset += 1
+        if "albums" in list(json_resp.keys()):
+            current_album_info = json_resp["albums"]["items"]
+            albums.extend(current_album_info)
+            offset += 50
+        else:
+            break
     return albums
 
-def get_track(access_token,total):
+def get_track(access_token,total,anio):
     tracks = []
     offset=0
-    limit=1
-    for i in range(total):
+    limit=50
+    for i in range(round(total/50)):
         response = requests.get(
-            f'https://api.spotify.com/v1/search?q=A&type=track&limit={limit}&offset={offset}',
+            f'https://api.spotify.com/v1/search?q=year%3A{anio}&type=track&limit={limit}&offset={offset}',
             headers={
                 "Authorization": f"Bearer {access_token}",
                 'Content-Type': 'application/json'
             }
         )
         json_resp = response.json()
-        current_track_info = json_resp["tracks"]["items"][0]
-        del current_track_info["album"]["images"]
-        tracks.append(current_track_info)
-        offset += 1
+        if "tracks" in list(json_resp.keys()):
+            current_track_info = json_resp["tracks"]["items"]
+            tracks.extend(current_track_info)
+            offset += 50
+        else:
+            break
     return tracks
 
-
-inicio = time.time()
-
-size = 500
-artist = get_artist(ACCESS_TOKEN,size)
-album = get_album(ACCESS_TOKEN,size)
-track = get_track(ACCESS_TOKEN,size)
+def extrae_api(size=1000):
+    inicio = time.time()
+    for anio in range(1990,2023):
+        artist = get_artist(ACCESS_TOKEN,size,anio)
+        album = get_album(ACCESS_TOKEN,size,anio)
+        track = get_track(ACCESS_TOKEN,size,anio)
+    fin = time.time()
+    print(f"Ejecución del programa en minutos: {(fin-inicio)/60} \nTamaños de: \nArtistas {len(artist)} \nAlbums {len(album)} \nTrack {len(track)}")
+        
 
 """
     INCERSIÓN DE DATOS A MONGO
@@ -105,8 +104,3 @@ mycollection1.insert_many(artist)
 mycollection2.insert_many(album)
 mycollection3.insert_many(track)
 """
-
-fin = time.time()
-print("Ejecución del programa en minutos: ", (fin-inicio)/60)
-
-# Referencia: https://github.com/imdadahad/spotify-get-current-playing-track/blob/master/main.py
