@@ -72,7 +72,7 @@ anio_fin = 2021
 
 inicio = time.time()
 
-print('Obteniendo artistas…')
+print('\nObteniendo artistas…')
 artistas = []
 for year in range(anio_inicio, anio_fin):
     print(f'\tAño {year}')
@@ -118,6 +118,9 @@ my_database = client.spotify
 my_collection1 = my_database.artists
 my_collection2 = my_database.albums
 my_collection3 = my_database.tracks
+print('Insertamos artistas\n')
 my_collection1.insert_many(artistas_final)
+print('Insertamos albums\n')
 my_collection2.insert_many(albums_final)
+print('Insertamos tracks\n')
 my_collection3.insert_many(tracks_final)
