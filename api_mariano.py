@@ -46,7 +46,7 @@ for year in range(anio_inicio, anio_fin):
    artistas = get_data(ACCESS_TOKEN, artistas, 1000, year, 'artist')
 # Limpiamos los artistas para que no haya repetidos
 artistas_final = list(unique_everseen(artistas))
-print(f'Previo a limpieza: {len(artistas)}')
+print(f'\nArtistas encontrados previo a limpieza: {len(artistas)}')
 print(f'Posterior a limpieza: {len(artistas_final)}')
 
 print('\nObteniendo albums')
@@ -56,7 +56,7 @@ for year in range(anio_inicio, anio_fin):
    albums = get_data(ACCESS_TOKEN, albums, 1000, year, 'album')
 # Limpiamos los albums para que no haya repetidos
 albums_final = list(unique_everseen(albums))
-print(f'Previo a limpieza: {len(albums)}')
+print(f'\nAlbums encontrados previo a limpieza: {len(albums)}')
 print(f'Posterior a limpieza: {len(albums_final)}')
 
 print('\nObteniendo tracks')
@@ -66,10 +66,10 @@ for year in range(anio_inicio, anio_fin):
    tracks = get_data(ACCESS_TOKEN, tracks, 1000, year, 'track')
 # Limpiamos los tracks para que no haya repetidos
 tracks_final = list(unique_everseen(tracks))
-print(f'Previo a limpieza: {len(tracks)}')
+print(f'Tracks encontradas previo a limpieza: {len(tracks)}')
 print(f'Posterior a limpieza: {len(tracks_final)}')
 
 
 fin = time.time()
-print(f"Ejecución del programa en minutos: {(fin-inicio)/60}")
+# print(f"Ejecución del programa en minutos: {(fin-inicio)/60}")
         

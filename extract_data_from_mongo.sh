@@ -5,7 +5,7 @@
 
 # Encendemos el docker por si no estaba
 CONTAINER_NAME='spotify'
-docker start $CONTAINER_NAME
+# docker start $CONTAINER_NAME
 
 # Corremos el script para generar los datos con unwind
 ./make_unwinds.sh

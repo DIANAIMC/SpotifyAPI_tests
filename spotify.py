@@ -103,13 +103,13 @@ print(f'Previo a limpieza: {len(tracks)}')
 print(f'Posterior a limpieza: {len(tracks_final)}')
 
 fin = time.time()
-print(f"\nEjecución del programa en minutos: {(fin-inicio)/60}")
+# print(f"\nEjecución del programa en minutos: {(fin-inicio)/60}")
 
 
 """
     INCERSIÓN DE DATOS A MONGO
 """
-
+print('----------------INSERTAMOS DATOS A MONGO-------------------')
 # Inicializamos MongoClient
 client = MongoClient()
 # Indicamos el servidor
