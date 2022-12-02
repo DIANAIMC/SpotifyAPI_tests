@@ -38,6 +38,7 @@ type: tipo de dato a extraer (artist, album, track)
 def get_data(access_token, lista, limite, year, type):
     offset = 0
     for _ in range(round(limite/50)):
+        print('.', end='', flush=True)
         response = requests.get(
          f'https://api.spotify.com/v1/search?q=year%3A{year}&type={type}&limit=50&offset={offset}',
             headers={
@@ -69,31 +70,31 @@ inicio = time.time()
 print('Obteniendo artistas…')
 artistas = []
 for year in range(anio_inicio, anio_fin):
-    print(f'\tAño {year}')
+    print(f'\tAño {year} ', end='')
     artistas = get_data(access_token, artistas, 1000, year, 'artist')
 # Limpiamos los artistas para que no haya repetidos
 artistas_final = list(unique_everseen(artistas))
-print(f'Artistas encontrados previo a limpieza: {len(artistas)}')
+print(f'\nArtistas encontrados previo a limpieza: {len(artistas)}')
 print(f'Posterior a limpieza: {len(artistas_final)}')
 
 print('\nObteniendo albums…')
 albums = []
 for year in range(anio_inicio, anio_fin):
-    print(f'\tAño {year}')
+    print(f'\tAño {year} ', end='')
     albums = get_data(access_token, albums, 1000, year, 'album')
 # Limpiamos los albums para que no haya repetidos
 albums_final = list(unique_everseen(albums))
-print(f'Albums encontrados previo a limpieza: {len(albums)}')
+print(f'\nAlbums encontrados previo a limpieza: {len(albums)}')
 print(f'Posterior a limpieza: {len(albums_final)}')
 
 print('\nObteniendo tracks…')
 tracks = []
 for year in range(anio_inicio, anio_fin):
-    print(f'\tAño {year}')
+    print(f'\tAño {year} ', end='')
     tracks = get_data(access_token, tracks, 1000, year, 'track')
 # Limpiamos los tracks para que no haya repetidos
 tracks_final = list(unique_everseen(tracks))
-print(f'Tracks encontrados previo a limpieza: {len(tracks)}')
+print(f'\nTracks encontrados previo a limpieza: {len(tracks)}')
 print(f'Posterior a limpieza: {len(tracks_final)}')
 
 fin = time.time()
