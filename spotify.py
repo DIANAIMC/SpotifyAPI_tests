@@ -107,7 +107,7 @@ print('\n-------------------INSERTAMOS DATOS A MONGO----------------------')
 # Inicializamos MongoClient
 client = MongoClient()
 # Indicamos el servidor
-client = MongoClient('localhost',27017)
+client = MongoClient('localhost', 27017)
 my_database = client.spotify
 my_collection1 = my_database.artists
 my_collection2 = my_database.albums
