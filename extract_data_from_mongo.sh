@@ -30,4 +30,4 @@ docker exec mongo mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTP
 # Necesitamos el ID del contenedor
 CONTAINER_NAME='mongo'
 ID_CONTAINER=$(docker ps -aqf "name=$CONTAINER_NAME")
-docker cp $ID_CONTAINER:/data_spotify ~/data_spotify
+docker cp $ID_CONTAINER:/data_spotify ~/

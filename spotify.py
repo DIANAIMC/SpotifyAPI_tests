@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # coding: utf-8
 
 # In[ ]:
@@ -69,7 +68,7 @@ token_url = "https://accounts.spotify.com/api/token"
 access_token = get_access_token(client_id, client_secret, token_url)
 
 anio_inicio = 2020
-anio_fin = 2023
+anio_fin = 2021
 
 inicio = time.time()
 
@@ -110,17 +109,15 @@ print(f"\nEjecución del programa en minutos: {(fin-inicio)/60}")
 """
     INCERSIÓN DE DATOS A MONGO
 """
-"""
+
 # Inicializamos MongoClient
 client = MongoClient()
 # Indicamos el servidor
 client = MongoClient('localhost',27017)
-mydatabase = client.spotify
-mycollection1 = mydatabase.artists
-mycollection2 = mydatabase.albums
-mycollection3 = mydatabase.tracks
-mycollection1.insert_many(artistas_final)
-mycollection2.insert_many(albums_final)
-mycollection3.insert_many(tracks_final)
-"""
-
+my_database = client.spotify
+my_collection1 = my_database.artists
+my_collection2 = my_database.albums
+my_collection3 = my_database.tracks
+my_collection1.insert_many(artistas_final)
+my_collection2.insert_many(albums_final)
+my_collection3.insert_many(tracks_final)
