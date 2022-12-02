@@ -72,14 +72,14 @@ anio_fin = 2021
 
 inicio = time.time()
 
-print('\nObteniendo artistas…')
+print('Obteniendo artistas…')
 artistas = []
 for year in range(anio_inicio, anio_fin):
     print(f'\tAño {year}')
     artistas = get_data(access_token, artistas, 1000, year, 'artist')
 # Limpiamos los artistas para que no haya repetidos
 artistas_final = list(unique_everseen(artistas))
-print(f'Previo a limpieza: {len(artistas)}')
+print(f'Artistas encontrados previo a limpieza: {len(artistas)}')
 print(f'Posterior a limpieza: {len(artistas_final)}')
 
 print('\nObteniendo albums…')
@@ -89,7 +89,7 @@ for year in range(anio_inicio, anio_fin):
     albums = get_data(access_token, albums, 1000, year, 'album')
 # Limpiamos los albums para que no haya repetidos
 albums_final = list(unique_everseen(albums))
-print(f'Previo a limpieza: {len(albums)}')
+print(f'Albums encontrados previo a limpieza: {len(albums)}')
 print(f'Posterior a limpieza: {len(albums_final)}')
 
 print('\nObteniendo tracks…')
@@ -99,7 +99,7 @@ for year in range(anio_inicio, anio_fin):
     tracks = get_data(access_token, tracks, 1000, year, 'track')
 # Limpiamos los tracks para que no haya repetidos
 tracks_final = list(unique_everseen(tracks))
-print(f'Previo a limpieza: {len(tracks)}')
+print(f'Tracks encontrados previo a limpieza: {len(tracks)}')
 print(f'Posterior a limpieza: {len(tracks_final)}')
 
 fin = time.time()
