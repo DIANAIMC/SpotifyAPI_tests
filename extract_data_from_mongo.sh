@@ -16,10 +16,12 @@ COLLECTION_NAME='albums'
 OUTPUT_FILE='/data_spotify/albums.json'
 docker exec mongo mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE
 
+# Extraemos los artistas
 COLLECTION_NAME='artists'
 OUTPUT_FILE='/data_spotify/artists.json'
 docker exec mongo mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE
 
+# Extraemos las canciones
 COLLECTION_NAME='tracks'
 OUTPUT_FILE='/data_spotify/tracks.json'
 docker exec mongo mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE
