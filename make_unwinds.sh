@@ -10,10 +10,10 @@ docker exec -it spotify mongosh --quiet \
 echo 'Hacemos unwind de los albums'
 docker exec -it spotify mongosh --quiet \
 --eval 'use spotify' \
---eval 'db.albums.aggregate([{$unwind:"$available_markets"}, {$project:{_id:0}}, {$out:"uw_albums"}])'
+--eval 'db.albums.aggregate([{$unwind:"$artists"}, {$project:{_id:0}}, {$out:"uw_albums"}])'
 
 # Hacemos el unwind de tracks sobre available_markets
 echo 'Hacemos unwind de los tracks'
 docker exec -it spotify mongosh --quiet \
 --eval 'use spotify' \
---eval 'db.tracks.aggregate([{$unwind:"$available_markets"}, {$project:{_id:0}}, {$out:"uw_tracks"}])'
+--eval 'db.tracks.aggregate([{$unwind:"$artists"}, {$project:{_id:0}}, {$out:"uw_tracks"}])'
