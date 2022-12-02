@@ -1,8 +1,5 @@
 # coding: utf-8
 
-# In[ ]:
-
-
 import requests
 import datetime
 import base64
