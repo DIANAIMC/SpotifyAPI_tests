@@ -19,17 +19,20 @@ DATA_BASE_NAME='spotify'
 
 COLLECTION_NAME='uw_albums'
 OUTPUT_FILE='/data_spotify/albums.json'
-docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE
+docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
+echo -e '\n'
 
 # Extraemos los artistas
 COLLECTION_NAME='uw_artists'
 OUTPUT_FILE='/data_spotify/artists.json'
-docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE
+docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
+echo -e '\n'
 
 # Extraemos las canciones
 COLLECTION_NAME='uw_tracks'
 OUTPUT_FILE='/data_spotify/tracks.json'
-docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE
+docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
+echo -e '\n'
 
 # Ahora que el archivo está en la terminal del contenedor, tenemos que sacarlo de ahí
 # Necesitamos el ID del contenedor

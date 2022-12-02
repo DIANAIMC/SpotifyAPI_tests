@@ -5,14 +5,11 @@
 
 import requests
 import datetime
-import pymongo
 import base64
 import time
-import json
 
 from pymongo import MongoClient
 from iteration_utilities import unique_everseen
-from urllib.parse import urlencode
 
 '''
 get_access_token(client_id, client_secret, token_url)
@@ -109,7 +106,7 @@ fin = time.time()
 """
     INCERSIÓN DE DATOS A MONGO
 """
-print('----------------INSERTAMOS DATOS A MONGO-------------------')
+print('\n-------------------INSERTAMOS DATOS A MONGO----------------------')
 # Inicializamos MongoClient
 client = MongoClient()
 # Indicamos el servidor
