@@ -62,7 +62,7 @@ token_url = "https://accounts.spotify.com/api/token"
 
 access_token = get_access_token(client_id, client_secret, token_url)
 
-anio_inicio = 2020
+anio_inicio = 2010
 anio_fin = 2021
 
 inicio = time.time()
@@ -70,7 +70,7 @@ inicio = time.time()
 print('Obteniendo artistas…')
 artistas = []
 for year in range(anio_inicio, anio_fin):
-    print(f'\tAño {year} ', end='')
+    print(f'\n\tAño {year} ', end='')
     artistas = get_data(access_token, artistas, 1000, year, 'artist')
 # Limpiamos los artistas para que no haya repetidos
 artistas_final = list(unique_everseen(artistas))
@@ -80,7 +80,7 @@ print(f'Posterior a limpieza: {len(artistas_final)}')
 print('\nObteniendo albums…')
 albums = []
 for year in range(anio_inicio, anio_fin):
-    print(f'\tAño {year} ', end='')
+    print(f'\n\tAño {year} ', end='')
     albums = get_data(access_token, albums, 1000, year, 'album')
 # Limpiamos los albums para que no haya repetidos
 albums_final = list(unique_everseen(albums))
@@ -90,7 +90,7 @@ print(f'Posterior a limpieza: {len(albums_final)}')
 print('\nObteniendo tracks…')
 tracks = []
 for year in range(anio_inicio, anio_fin):
-    print(f'\tAño {year} ', end='')
+    print(f'\n\tAño {year} ', end='')
     tracks = get_data(access_token, tracks, 1000, year, 'track')
 # Limpiamos los tracks para que no haya repetidos
 tracks_final = list(unique_everseen(tracks))
