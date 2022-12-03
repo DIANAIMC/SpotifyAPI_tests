@@ -1,7 +1,8 @@
 #! /bin/bash
 
 # Nota: esto supone que los datos ya están cargados en un docker
-
+WORKING_DIR=$1
+echo $WORKING_DIR
 
 # Encendemos el docker por si no estaba
 CONTAINER_NAME='spotify'
@@ -37,4 +38,4 @@ echo -e '\n'
 # Ahora que el archivo está en la terminal del contenedor, tenemos que sacarlo de ahí
 # Necesitamos el ID del contenedor
 ID_CONTAINER=$(docker ps -aqf "name=$CONTAINER_NAME")
-docker cp $ID_CONTAINER:/data_spotify ~/
+docker cp $ID_CONTAINER:/data_spotify $WORKING_DIR/

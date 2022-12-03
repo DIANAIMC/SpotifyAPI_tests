@@ -1,5 +1,7 @@
 #! /bin/bash
 
+CURRENT_DIR=$(pwd)
+
 # Primero creamos el contenedor
 echo '---------------------CREACIÓN DEL CONTENEDOR---------------------'
 ./scripts/create_container.sh
@@ -10,4 +12,4 @@ python ./scripts/spotify.py
 
 # Y ahora sacamos los datos de mongo y los traemos a nuestra computadora
 echo '-------------------EXTRACCIÓN DE DATOS DE MONGO-------------------'
-./scripts/extract_data_from_mongo.sh
+./scripts/extract_data_from_mongo.sh $CURRENT_DIR
