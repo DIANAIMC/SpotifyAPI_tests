@@ -2,7 +2,6 @@
 
 # Nota: esto supone que los datos ya están cargados en un docker
 WORKING_DIR=$1
-echo $WORKING_DIR
 
 # Encendemos el docker por si no estaba
 CONTAINER_NAME='spotify'
