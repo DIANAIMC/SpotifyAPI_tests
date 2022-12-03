@@ -20,5 +20,5 @@ echo '-------------------EXTRACCIÓN DE DATOS DE MONGO-------------------'
 echo -e '------------------------CONVERSIÓN A CSV------------------------'
 ./scripts/obtencion_csv.sh $CURRENT_DIR/data
 
-# echo -e '\n------------------------UPLOAD DATA TO MONET------------------------'
-# ./scripts/upload_data_monet.sh $CURRENT_DIR/data
+echo -e '\n------------------------UPLOAD DATA TO MONET------------------------'
+./scripts/upload_data_monet.sh $CURRENT_DIR/data
