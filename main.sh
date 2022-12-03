@@ -17,5 +17,8 @@ echo '-------------------EXTRACCIÓN DE DATOS DE MONGO-------------------'
 ./scripts/extract_data_from_mongo.sh $CURRENT_DIR/data
 
 # Convertimos json a csv
-echo '------------------------CONVERSIÓN A CSV------------------------'
+echo -e '------------------------CONVERSIÓN A CSV------------------------'
 ./scripts/obtencion_csv.sh $CURRENT_DIR/data
+
+# echo -e '\n------------------------UPLOAD DATA TO MONET------------------------'
+# ./scripts/upload_data_monet.sh $CURRENT_DIR/data
