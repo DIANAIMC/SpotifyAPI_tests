@@ -3,17 +3,17 @@
 docker exec -it spotify mongosh \
 --quiet \
 --eval 'use spotify' \
---eval 'db.uw_artists.updateMany({name:/.*/},{ $set: { name: { $replace: [ /,/g, "" ] }}})' #\
+--eval 'db.uw_tracks.deleteMany({ "name": { $regex: /,+/ } })' \
 # > /dev/null
 
 docker exec -it spotify mongosh \
 --quiet \
 --eval 'use spotify' \
---eval 'db.uw_albums.updateMany({name:/.*/},{ $set: { name: { $replace: [ /,/g, "" ] }}})' # \
+--eval 'db.uw_albums.deleteMany({ "name": { $regex: /,+/ } })' \
 # > /dev/null
 
 docker exec -it spotify mongosh \
 --quiet \
 --eval 'use spotify' \
---eval 'db.uw_tracks.updateMany({name:/.*/},{ $set: { name: { $replace: [ /,/g, "" ] }}})' # \
+--eval 'db.uw_tracks.deleteMany({ "name": { $regex: /,+/ } })' \
 # > /dev/null

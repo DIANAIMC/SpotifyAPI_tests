@@ -13,24 +13,45 @@ CONTAINER_NAME='spotify'
 # Creamos una carpeta en el contenedor para guardar las colecciones que vayamos bajando
 docker exec $CONTAINER_NAME mkdir -p data_spotify
 
-# Exportamos los datos de la base de datos a un archivo .json 
+# Exportamos los datos de la base de datos a un archivo .json
 # Ese archivo sigue dentro de la terminal del contenedor docker
 DATA_BASE_NAME='spotify'
 
-COLLECTION_NAME='uw_albums'
-OUTPUT_FILE='/data_spotify/albums.json'
+echo "Exportamos archivos json para Monet"
+
+COLLECTION_NAME='uw_albums_mon'
+OUTPUT_FILE='/data_spotify/albums_mon.json'
 docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
 echo -e '\n'
 
 # Extraemos los artistas
-COLLECTION_NAME='uw_artists'
-OUTPUT_FILE='/data_spotify/artists.json'
+COLLECTION_NAME='uw_artists_mon'
+OUTPUT_FILE='/data_spotify/artists_mon.json'
 docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
 echo -e '\n'
 
 # Extraemos las canciones
-COLLECTION_NAME='uw_tracks'
-OUTPUT_FILE='/data_spotify/tracks.json'
+COLLECTION_NAME='uw_tracks_mon'
+OUTPUT_FILE='/data_spotify/tracks_mon.json'
+docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
+echo -e '\n'
+
+echo "Exportamos archivos json para Neo4j"
+
+COLLECTION_NAME='uw_albums_neo'
+OUTPUT_FILE='/data_spotify/albums_neo.json'
+docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
+echo -e '\n'
+
+# Extraemos los artistas
+COLLECTION_NAME='uw_artists_neo'
+OUTPUT_FILE='/data_spotify/artists_neo.json'
+docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
+echo -e '\n'
+
+# Extraemos las canciones
+COLLECTION_NAME='uw_tracks_neo'
+OUTPUT_FILE='/data_spotify/tracks_neo.json'
 docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
 echo -e '\n'
 
@@ -38,3 +59,4 @@ echo -e '\n'
 # Necesitamos el ID del contenedor
 ID_CONTAINER=$(docker ps -aqf "name=$CONTAINER_NAME")
 docker cp $ID_CONTAINER:/data_spotify $WORKING_DIR/
+#docker exec $ID_CONTAINER cp /data_spotify $WORKING_DIR
