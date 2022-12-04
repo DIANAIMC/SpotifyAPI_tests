@@ -2,9 +2,9 @@
 
 WORKING_DIR=$1
 
-echo 'followers,genre,artist_id,name,popularity' > $WORKING_DIR/csv/artists.csv
-echo 'artist_id,album_id,name,release_date,total_tracks' > $WORKING_DIR/csv/albums.csv
-echo 'album_id,artist_id,disc_number,duration_ms,explicit,track_id,name,popularity,track_number' > $WORKING_DIR/csv/tracks.csv 
+echo 'followers,genre,artist_id,popularity,name' > $WORKING_DIR/csv/artists.csv
+echo 'artist_id,album_id,release_date,total_tracks,name' > $WORKING_DIR/csv/albums.csv
+echo 'album_id,artist_id,disc_number,duration_ms,explicit,track_id,popularity,track_number,name' > $WORKING_DIR/csv/tracks.csv 
 
 echo 'Convirtiendo artistas'
 sleep 1
