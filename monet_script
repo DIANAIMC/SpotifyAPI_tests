@@ -1,0 +1,15 @@
+#! /bin/bash
+
+#Prendemos el contenedor
+docker stop spotify_monet
+docker rm spotify_monet
+docker run -d --name spotify_monet -p 50001:50000 --mount source=spotify-data,target=/data monetdb/monetdb
+
+#Ejecuta la terminal de monet
+#docker exec -it spotify_monet /bin/bash
+
+#Creamos base de datos
+#docker exec -it spotify_monet mclient -u user -d spotify
+
+#Entramos a la terminal de la base de datos
+#docker exec -it spotify_monet mclient spotify
