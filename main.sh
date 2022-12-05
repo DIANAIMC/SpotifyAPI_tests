@@ -28,3 +28,4 @@ echo -e '\n------------------------UPLOAD DATA TO MONET------------------------'
 
 echo -e '\n------------------------UPLOAD DATA TO NEO4J------------------------'
 ./scripts/upload_data_neo4j.sh $CURRENT_DIR/data
+#
