@@ -1,15 +1,18 @@
 #! /bin/bash
 
-WORKING_DIR='/Users/mariano/Documents/bases_datos_nr/SpotifyAPI_tests'
-echo $WORKING_DIR
+WORKING_DIR=$1
+#echo $WORKING_DIR
 
-echo 'Eliminamos el contendedor spotify en caso de que ya exista'
-# Eliminamos y creamos el contenedor en caso de que ya exista
+echo 'Eliminamos el contendedor monetdb en caso de que ya exista'
 docker stop monetdb > /dev/null
 docker rm monetdb > /dev/null
 
 # Creamos el contenedor con monet
+echo 'Creamos el contenedor'
 docker run -d --name monetdb -p 50001:50000 --mount source=spotify-data,target=/data monetdb/monetdb > /dev/null
 
 # Metemos los datos que queremos adentro del volumen
-docker cp $WORKING_DIR/data/csv monetdb:/data
+echo 'Insertamos al docker archivos csv'
+docker cp $WORKING_DIR/csv/monet monetdb:/data
+
+
