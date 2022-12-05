@@ -31,7 +31,7 @@ echo -e '\nInsertamos datos en tablas:'
 echo '- Datos de artistas'
 docker exec -i monetdb mclient -d spotify -s "copy offset 2 into artist from '/data/monet/artists_mon.csv' on client using delimiters ',',E'\n',E'\"' null as ' ';"
 
-echo '-Datos de albums'
+echo '- Datos de albums'
 docker exec -i monetdb mclient -d spotify -s "copy offset 2 into album from '/data/monet/albums_mon.csv' on client using delimiters ',',E'\n',E'\"' null as ' ';"
 
 echo '- Datos de tracks'
