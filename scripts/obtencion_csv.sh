@@ -33,12 +33,12 @@ rm $WORKING_DIR/csv/monet/tracks.csv
 
 echo -e "\nObtenemos archivos csv para Neo4j"
 
-echo 'followers,genre,artist_id,popularity,namee' > $WORKING_DIR/csv/neo4j/artists.csv
+echo 'followers,artist_id,popularity,namee' > $WORKING_DIR/csv/neo4j/artists.csv
 echo 'artist_id,album_id,release_date,total_tracks,namee' > $WORKING_DIR/csv/neo4j/albums.csv
 echo 'album_id,artist_id,disc_number,duration_ms,explicit,track_id,popularity,track_number,namee' > $WORKING_DIR/csv/neo4j/tracks.csv 
 
 echo -e '\n\t- Convirtiendo artistas'
-jq -r '[.followers.total, .genres, .id, .popularity, .name] | @csv' $WORKING_DIR/data_spotify/artists_neo.json | awk -F, '{printf "%s,%s,%s,%s,%s\n", $1, $2, $3, $4, $5}' >> $WORKING_DIR/csv/neo4j/artists.csv
+jq -r '[.followers.total, .id, .popularity, .name] | @csv' $WORKING_DIR/data_spotify/artists_neo.json | awk -F, '{printf "%s,%s,%s,%s\n", $1, $2, $3, $4}' >> $WORKING_DIR/csv/neo4j/artists.csv
 echo -e '\t- Convirtiendo albums'
 jq -r '[.artists.id, .id, .release_date, .total_tracks, .name] | @csv' $WORKING_DIR/data_spotify/albums_neo.json | awk -F, '{printf "%s,%s,%s, %s,%s\n", $1, $2, $3, $4, $5}' >> $WORKING_DIR/csv/neo4j/albums.csv
 echo -e '\t- Convirtiendo tracks'
