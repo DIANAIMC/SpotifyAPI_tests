@@ -16,7 +16,7 @@ docker rm neo4jdb > /dev/null
 
 # Creamos el contenedor con neo4j
 echo 'Creamos el contenedor'
-docker run -d --name neo4jdb -p 7474:7474 -v $WORKING_DIR:/var/lib/neo4j/import --env NEO4J_AUTH=neo4j/test neo4j > /dev/null
+docker run -d --name neo4jdb -p 7474:7474 -p 7687:7687 -v $WORKING_DIR:/var/lib/neo4j/import --env NEO4J_AUTH=neo4j/test neo4j > /dev/null
 
 sleep 10
 echo 'Insertamos al docker archivos csv'
