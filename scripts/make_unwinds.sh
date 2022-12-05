@@ -2,21 +2,21 @@
 
 # PARA MONET
 
-echo "Unwinds para Monet"
+echo "Unwinds para Monet:"
 
-echo -e "\nArtists sobre géneros"
+echo -e "\n\tArtists -> géneros"
 # Hacemos el unwind de los artistas sobre los géneros
 docker exec -it spotify mongosh --quiet \
 --eval 'use spotify' \
 --eval 'db.artists.aggregate([{$unwind:"$genres"}, {$project:{_id:0}}, {$out:"uw_artists_mon"}])'
 
-echo "Albums sobre 'available markets'"
+echo -e "\tAlbums -> 'available markets'"
 # Hacemos el unwind de albums sobre available_markets
 docker exec -it spotify mongosh --quiet \
 --eval 'use spotify' \
 --eval 'db.albums.aggregate([{$unwind:"$available_markets"}, {$project:{_id:0}}, {$out:"uw_albums_mon"}])'
 
-echo "Tracks sobre 'available markets'"
+echo -e "\tTracks -> 'available markets'"
 # Hacemos el unwind de tracks sobre available_markets
 docker exec -it spotify mongosh --quiet \
 --eval 'use spotify' \
@@ -28,20 +28,20 @@ docker exec -it spotify mongosh --quiet \
 
 echo -e "\nUnwinds para Neo4j"
 
-echo -e "\nArtists sobre géneros"
+echo -e "\n\tArtists -> géneros"
 
 # Hacemos el unwind de los artistas sobre los géneros
 docker exec -it spotify mongosh --quiet \
 --eval 'use spotify' \
 --eval 'db.artists.aggregate([{$unwind:"$genres"}, {$project:{_id:0}}, {$out:"uw_artists_neo"}])' 
 
-echo "Albums sobre artists"
+echo -e "\tAlbums ->  artists"
 # Hacemos el unwind de albums sobre available_markets
 docker exec -it spotify mongosh --quiet \
 --eval 'use spotify' \
 --eval 'db.albums.aggregate([{$unwind:"$artists"}, {$project:{_id:0}}, {$out:"uw_albums_neo"}])'
 
-echo "Tracks sobre artists"
+echo -e "\tTracks -> artists"
 # Hacemos el unwind de tracks sobre available_markets
 docker exec -it spotify mongosh --quiet \
 --eval 'use spotify' \
