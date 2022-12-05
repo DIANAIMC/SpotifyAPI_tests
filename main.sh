@@ -22,6 +22,7 @@ echo -e '------------------------CONVERSIÓN A CSV------------------------'
 
 echo -e '\n------------------------UPLOAD DATA TO MONET------------------------'
 ./scripts/upload_data_monet.sh $CURRENT_DIR/data
+#./scripts/creacion_tablas.sh
 
 echo -e '\n------------------------UPLOAD DATA TO NEO4J------------------------'
 ./scripts/upload_data_neo4j.sh $CURRENT_DIR/data
