@@ -19,11 +19,11 @@ jq -r '[.album.id, .available_markets, .disc_number, .duration_ms, .explicit, .i
 #(Esto pasa porque hay artistas, albumes y tracks que tienen comas en su nombre)
 
 #Artists
-cat $WORKING_DIR/csv/monet/artists.csv | sed 's/.$//' | sed 's/$/"/' | sed '1s/.$//' | sed "$ d" | sed 's/"//g' | sed 's/\r/\\r/g' | sed 's/\\//g' | sed "s/[#|$|%|*|@|&|'|-|_|¿|?|+|=]//g" > $WORKING_DIR/csv/monet/artists_mon.csv
+cat $WORKING_DIR/csv/monet/artists.csv | sed 's/.$//' | sed 's/$/"/' | sed '1s/.$//' | sed "$ d" | sed 's/"//g' | sed 's/\r/\\r/g' | sed 's/\\//g' | sed "s/[#|$|%|*|@|&|'|-|_|¿|?|+|=]//g" | sed 's/[^a-zA-Z0-9, -]//g' > $WORKING_DIR/csv/monet/artists_mon.csv
 #Albums
-cat $WORKING_DIR/csv/monet/albums.csv | sed 's/.$//' | sed 's/$/"/' | sed '1s/.$//' | sed "$ d" | sed 's/"//g' | sed 's/\r/\\r/g' | sed 's/\\//g' | sed "s/[#|$|%|*|@|&|'|-|_|¿|?|+|=]//g" > $WORKING_DIR/csv/monet/albums_mon.csv
+cat $WORKING_DIR/csv/monet/albums.csv | sed 's/.$//' | sed 's/$/"/' | sed '1s/.$//' | sed "$ d" | sed 's/"//g' | sed 's/\r/\\r/g' | sed 's/\\//g' | sed "s/[#|$|%|*|@|&|'|-|_|¿|?|+|=]//g" | sed 's/[^a-zA-Z0-9, -]//g' > $WORKING_DIR/csv/monet/albums_mon.csv
 #Tracks
-cat $WORKING_DIR/csv/monet/tracks.csv | sed 's/.$//' | sed 's/$/"/' | sed '1s/.$//' | sed "$ d" | sed 's/"//g' | sed 's/\r/\\r/g' | sed 's/\\//g' | sed "s/[#|$|%|*|@|&|'|-|_|¿|?|+|=]//g" > $WORKING_DIR/csv/monet/tracks_mon.csv
+cat $WORKING_DIR/csv/monet/tracks.csv | sed 's/.$//' | sed 's/$/"/' | sed '1s/.$//' | sed "$ d" | sed 's/"//g' | sed 's/\r/\\r/g' | sed 's/\\//g' | sed "s/[#|$|%|*|@|&|'|-|_|¿|?|+|=]//g" | sed 's/[^a-zA-Z0-9, -]//g' > $WORKING_DIR/csv/monet/tracks_mon.csv
 
 #Eliminamos los csv auxiliares
 rm $WORKING_DIR/csv/monet/artists.csv
