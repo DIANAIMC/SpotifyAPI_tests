@@ -19,5 +19,7 @@ echo 'Creamos base de datos "spotify"'
 docker exec -it monetdb monetdb create -p monetdb spotify > /dev/null
 
 # Entramos a la base de datos con el mclient
-echo 'La contrasena es "monetdb"'
-docker exec -it monetdb mclient -u monetdb -d spotify
+#echo 'La contrasena es "monetdb"'
+#docker exec -it monetdb mclient -u monetdb -d spotify
+
+./scripts/creacion_tablas_monet.sh
