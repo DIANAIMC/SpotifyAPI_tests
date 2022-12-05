@@ -16,9 +16,6 @@ echo 'Insertamos al docker archivos csv'
 docker cp $WORKING_DIR/csv/monet monetdb:/data
 
 
-docker cp $WORKING_DIR/data/csv monetdb:/data
-
-# Creamos la base de datos dentro del bash de monetdb
 echo 'Creamos base de datos "spotify"'
 docker exec -it monetdb monetdb create -p monetdb spotify > /dev/null
 
