@@ -62,8 +62,8 @@ token_url = "https://accounts.spotify.com/api/token"
 
 access_token = get_access_token(client_id, client_secret, token_url)
 
-anio_inicio = 2020
-anio_fin = 2021
+anio_inicio = 2018
+anio_fin = 2023
 
 inicio = time.time()
 
