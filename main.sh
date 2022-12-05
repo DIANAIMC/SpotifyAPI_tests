@@ -1,6 +1,10 @@
 #! /bin/bash
 
 CURRENT_DIR=$(pwd)
+
+#Poner un if para que solo se ejecute en la compu de Diana y que solo lo borre si existe el directorio
+#sudo rm -rf $CURRENT_DIR/data/csv/neo4j
+
 mkdir -p $CURRENT_DIR/data
 mkdir -p $CURRENT_DIR/data/csv
 mkdir -p $CURRENT_DIR/data/csv/monet
