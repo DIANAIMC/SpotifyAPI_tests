@@ -3,6 +3,8 @@
 CURRENT_DIR=$(pwd)
 mkdir -p $CURRENT_DIR/data
 mkdir -p $CURRENT_DIR/data/csv
+mkdir -p $CURRENT_DIR/data/csv/monet
+mkdir -p $CURRENT_DIR/data/csv/neo4j
 
 # Primero creamos el contenedor
 echo '---------------------CREACIÓN DEL CONTENEDOR---------------------'
