@@ -23,3 +23,5 @@ docker exec -it monetdb monetdb create -p monetdb spotify > /dev/null
 #docker exec -it monetdb mclient -u monetdb -d spotify
 
 ./scripts/creacion_tablas_monet.sh
+# copy offset 2 into spotify from '/data/monet/albums_mon.csv' on album using delimiters ',',E'\n',E'\"' null as ' ';
+# copy offset 2 into track from '/data/monet/tracks_mon.csv' on client using delimiters ',',E'\n' null as ' ';
