@@ -18,7 +18,8 @@ docker rm neo4jdb > /dev/null
 echo 'Creamos el contenedor'
 docker run -d --name neo4jdb -p 7474:7474 -p 7687:7687 -v $WORKING_DIR:/var/lib/neo4j/import --env NEO4J_AUTH=neo4j/test neo4j > /dev/null
 
-sleep 10
+echo 'Please wait, this will take some time...'
+sleep 15
 echo 'Insertamos al docker archivos csv'
 ./scripts/creacion_nodos_neo4j.sh
 # Metemos los datos que queremos adentro del volumen
