@@ -33,7 +33,7 @@ echo -e "\n\tArtists -> géneros"
 # Hacemos el unwind de los artistas sobre los géneros
 docker exec -it spotify mongosh --quiet \
 --eval 'use spotify' \
---eval 'db.artists.aggregate([{$unwind:"$genres"}, {$project:{_id:0}}, {$out:"uw_artists_neo"}])' 
+--eval 'db.artists.aggregate([{$project:{_id:0}}, {$out:"uw_artists_neo"}])' 
 
 echo -e "\tAlbums ->  artists"
 # Hacemos el unwind de albums sobre available_markets
