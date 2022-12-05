@@ -1,14 +1,5 @@
 #! /bin/bash
 
-echo "Creamos base de datos en Monet"
-#docker exec -it monetdb mclient -q "CREATE DATABASE spotify;"
-#docker exec -it monetdb create -p monetdb spotify
-#docker exec -it monetdb  mclient -u monetdb -d spotify
-docker exec -it monetdb /bin/bash --quiet\
---eval "monetdb create -p monetdb spotify"\
-
-echo "La contraseña es monetdb"
-
 echo "Creamos tablas:"
 echo "Tabla artist"
 docker exec -it monetdb mclient -d spotify -q << EOF
