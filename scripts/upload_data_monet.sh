@@ -1,7 +1,6 @@
 #! /bin/bash
 
 WORKING_DIR=$1
-#echo $WORKING_DIR
 
 echo 'Eliminamos el contendedor monetdb en caso de que ya exista'
 docker stop monetdb > /dev/null
