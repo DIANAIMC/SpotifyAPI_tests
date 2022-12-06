@@ -1,10 +1,4 @@
 #+Author: Diana Muñoz @DIANAIMC, Mariano Alcaraz @MarianoAlcarazAguilar, Sebastián Murillo @S-murilloG
-
-*** Pasos para todo
-1. Crear el contenedor
-2. Extraer los datos y meterlos al contenedor
-3. Sacar los datos de mongo a nuestra máquina en formato json
-
 # SpotifyAPI_tests
 Proyecto Final: Bases de Datos No Relacionales
 
