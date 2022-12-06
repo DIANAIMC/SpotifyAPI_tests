@@ -18,7 +18,7 @@ Proyecto Final: Bases de Datos No Relacionales
 
 Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en Mongo, Monet y Neo4j
 
-* API
+* Extracción de datos - API
   Nosotros elegimos la API de Spotify ya que nos parecía divertida (spoiler al final ya ni fue tan divertido) por lo que extrajimos 3 objetos que nos parecieron interesantes para analizar posteriormente, los cuales al extraerlos de la API se ven de la siguiente forma:
 *** Artist:
   #+begin_src js
@@ -291,7 +291,7 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
   
  En el siguiente escript nos encargamos de extraer 1000 (si es que hay) elementos de "artists", "albums" y "tracks" durante 5 años, en particular, entre el 2018 y el 2022.
  
-**** Para poder extraer los datos tuvimos varias limitantes:
+*** Para poder extraer los datos tuvimos varias limitantes:
  
 *1. Spotify solo nos permite extraer como máximo 50 objetos por request:*
 
@@ -410,9 +410,60 @@ fin = time.time()
 # print(f"\nEjecución del programa en minutos: {(fin-inicio)/60}")
     #+end_src
     
+ Una vez hecho lo anterior, podemos insertar nuestros datos en Mongo.
  
- 
-* MONGO
-* MONET
-* NEO4J
+* Transfromación e incersión de datos
+** Mongo
 
+#+begin_src py
+print('\n-------------------INSERTAMOS DATOS A MONGO----------------------')
+# Inicializamos MongoClient
+client = MongoClient()
+# Indicamos el servidor
+client = MongoClient('localhost', 27017)
+my_database = client.spotify
+my_collection1 = my_database.artists
+my_collection2 = my_database.albums
+my_collection3 = my_database.tracks
+print('Insertamos artistas\n')
+my_collection1.insert_many(artistas_final)
+print('Insertamos albums\n')
+my_collection2.insert_many(albums_final)
+print('Insertamos tracks\n')
+my_collection3.insert_many(tracks_final)
+#+end_src
+
+~Nota:~ Para que este código funcione, debe correrse junto al anterior y asegurarse que el contenedor de Mongo en Docker ya esté funcionando, lo cual el "main.sh" lo hace a través del siguiente script:
+
+#+begin_src
+# Paramos y eliminamos el contenedor en caso de que ya exista
+echo 'Eliminamos el contendedor spotify en caso de que ya exista'
+docker stop spotify > /dev/null
+docker rm spotify > /dev/null
+
+# Creamos un volumen que se llama spotify-data
+echo 'Creamos el volumen y el contenedor spotify'
+docker volume create spotify-data > /dev/null
+# Creamos el contenedor con el volumen creado y con mongo como imagen 
+docker run -d --name spotify -p 27017:27017 --mount source=spotify-data,target=/data mongo > /dev/null
+
+# Iniciamos el contenedor
+docker start spotify > /dev/null
+sleep 2
+
+# Eliminamos las colecciones en caso de que existan
+docker exec -it spotify mongosh --quiet \
+--eval 'use spotify' \
+--eval 'db.artists.drop()' \
+--eval 'db.albums.drop()' \
+--eval 'db.tracks.drop()' \
+--eval 'db.uw_artists.drop()' \
+--eval 'db.uw_albums.drop()' \
+--eval 'db.uw_tracks.drop()' \
+> /dev/null
+#+end_src
+
+** MONET
+** NEO4J
+
+* Queries analíticas
