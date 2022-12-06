@@ -289,15 +289,11 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
 }
   #+end_src
   
- Para poder extraer los datos tuvimos varias limitantes:
- 1. Spotify solo nos permite extraer como máximo 50 objetos por request
-    Iterativamente extraemos de 50 objetos hasta llegar al número de objetos que realmente deseamos.
-
-2. De igual forma, solo nos permite extraer hasta 1000 en total por query*
-    Por ello decidimos extraer 1000 elementos por objeto para 5 años distintos (cada año es un query diferente)
- 
- 3. Para poder hacer el request necesitamos tener una autorización, un token, el cual tienes que generar con un cuenta de Spotify
-    Creamos generamos credenciales de Spotify a partir de una cuenta de Spotify de un integrante del equipo (para fines del proyecto las credenciales están expuestas, pero una vez. Simplemente conecte Spotify Developer a su cuenta de Spotify.
+ En el siguiente escript nos encargamos de extraer 1000 (si es que hay) elementos de "artists", "albums" y "tracks" durante 5 años, en particular, entre el 2018 y el 2022.
+ *Para poder extraer los datos tuvimos varias limitantes:*
+ 1. Spotify solo nos permite extraer como máximo 50 objetos por request: Iterativamente extraemos 50 objetos hasta llegar al número de objetos que realmente deseamos.
+2. De igual forma, solo nos permite extraer hasta 1000 elementos en total por query*: Por ello decidimos extraer 1000 elementos por objeto para 5 años distintos (cada año es un query diferente)
+3. Para poder hacer el request necesitamos tener una autorización, un token, el cual tienes que generar con un cuenta de Spotify: Generamos credenciales de Spotify a partir de una cuenta de Spotify de un integrante del equipo (para fines del proyecto las credenciales están expuestas, pero una vez que el proyecto sea calificado se removerán). Dichas credenciales nos permiten generar un un token de autenticación por cada ejecución del proyecto.
     
 #+begin_src py
 import requests
@@ -399,6 +395,8 @@ print(f'Posterior a limpieza: {len(tracks_final)}')
 fin = time.time()
 # print(f"\nEjecución del programa en minutos: {(fin-inicio)/60}")
     #+end_src
+    
+ 
  
 * MONGO
 * MONET
