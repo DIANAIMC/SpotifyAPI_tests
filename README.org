@@ -21,6 +21,7 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
 * API
   Nosotros elegimos la API de Spotify ya que nos parecía divertida (spoiler al final ya ni fue tan divertido) por lo que extrajimos 3 objetos que nos parecieron interesantes para analizar posteriormente, los cuales al extraerlos de la API se ven de la siguiente forma:
   ***Artist:
+  #+begin_src 
   {
   "artists": {
     "href": "https://api.spotify.com/v1/search?query=2022&type=artist&locale=es-ES%2Ces%3Bq%3D0.9&offset=0&limit=1",
@@ -66,10 +67,10 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
     "total": 297
   }
 }
- #+begin_src 
+ #+end_src 
 
   ***Album:
-  #+end_src
+  #+begin_src
   {
   "albums": {
     "href": "https://api.spotify.com/v1/search?query=2022&type=album&locale=es-ES%2Ces%3Bq%3D0.9&offset=0&limit=1",
@@ -145,7 +146,7 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
 }
   #+end_src
   ***Track:
-  #+end_src
+  #+begin_src
   {
   "tracks": {
     "href": "https://api.spotify.com/v1/search?query=2022&type=track&locale=es-ES%2Ces%3Bq%3D0.9&offset=0&limit=1",
