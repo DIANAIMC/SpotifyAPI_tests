@@ -20,7 +20,7 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
 
 * API
   Nosotros elegimos la API de Spotify ya que nos parecía divertida (spoiler al final ya ni fue tan divertido) por lo que extrajimos 3 objetos que nos parecieron interesantes para analizar posteriormente, los cuales al extraerlos de la API se ven de la siguiente forma:
-  ***Artist:
+*** Artist:
   #+begin_src 
   {
   "artists": {
@@ -69,7 +69,7 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
 }
  #+end_src 
 
-  ***Album:
+  *** Album:
   #+begin_src
   {
   "albums": {
@@ -145,7 +145,7 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
   }
 }
   #+end_src
-  ***Track:
+  *** Track:
   #+begin_src
   {
   "tracks": {
