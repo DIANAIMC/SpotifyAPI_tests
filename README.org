@@ -18,11 +18,12 @@ Proyecto Final: Bases de Datos No Relacionales
 
 Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en Mongo, Monet y Neo4j. Para ver las queries analíticas ir al final del archivo.
 
-Si es que vamos a correr los "cachos" de código, entonces hay que empezar haciendo este:
+Si es que se prefiere correr los "cachos" de código con forme a la explicación, entonces hay que empezar haciendo este:
 
 #+begin_src sh
-CURRENT_DIR=$(pwd)
+./requirements.txt
 
+CURRENT_DIR=$(pwd)
 
 mkdir -p $CURRENT_DIR/data
 mkdir -p $CURRENT_DIR/data/csv
@@ -313,7 +314,7 @@ mkdir -p $CURRENT_DIR/data/csv/neo4j
 
   Por ello decidimos extraer 1000 elementos por objeto para 5 años distintos (cada año es un query diferente).
   
-*3. Para poder hacer el request necesitamos tener una autorización, un token, el cual tienes que generar con un cuenta de Spotify:*
+*3. Para poder hacer el request necesitamos tener una autorización, un token, para la cual tienes que generarla con un cuenta de Spotify:*
 
   Generamos credenciales de Spotify a partir de una cuenta de Spotify de un integrante del equipo (para fines del proyecto las credenciales están expuestas, pero una vez que el proyecto sea calificado se removerán). Dichas credenciales nos permiten generar un un token de autenticación por cada ejecución del proyecto. 
 
@@ -476,7 +477,7 @@ docker exec -it spotify mongosh --quiet \
 #+end_src
 
 *Transformamos los datos*
-Una vez insertados los datos, debemos extraer nuevamente los datos correspondientes para insertarlos a una base de datos en Monet y otra en Neo4j, para ello tomamos 2 decisiones clave:
+Una vez insertados los datos, debemos extraer los datos correspondientes para insertarlos a una base de datos en Monet y otra en Neo4j, para ello tomamos 2 decisiones clave:
 
 1. Hacer ~unwind~ a "artist" sobre sus géneros, ~unwind~ a "album" y a "track" sobre ~available_markets~ con el fin de análisar los géneros de los artistas y los paises donde las canciones y albumes se encuentran disponibles. Por la naturaleza de dichos objetos, habrán muchísimos elementos repetidos y qué mejor lugar para hacer la analítica que *Monet*
 2. Hacer ~unwind~ a "album" y a "track" sobre ~artists_id~ con el fin de análizar las relaciones entre "artists", "albums" y "tracks". Y qué mejor lugar para hacer la analítica de relaciones entre objetos que en *Neo4j*
@@ -532,7 +533,7 @@ docker exec -it spotify mongosh --quiet \
 --eval 'db.tracks.aggregate([{$unwind:"$artists"}, {$project: {_id:0}}, {$out:"uw_tracks_neo"}])' 
 #+end_src
 
-Una vez hechos los ~unwind~ e insertarlos a nuevas colecciones, estas las extraemos como ~.json~ y posteriormente dichos archivos los tranformamos a csv. Nótese que como Mongo está en un contenedor de Docker, debemos sacar dichos archivos de Docker para tener acceso a ellos en nuestra computadora.
+Una vez hechos los ~unwind~ e insertarlos a nuevas colecciones, estas las extraemos como archivos ~.json~ y posteriormente dichos archivos los tranformamos a ~csv~. Nótese que como Mongo está en un contenedor de Docker, debemos sacar dichos archivos de Docker para tener acceso a ellos en nuestra computadora, eso hacemos a continuación:
 
 #+begin_src sh
 # Nota: esto supone que los datos ya están cargados en un docker
@@ -598,7 +599,7 @@ docker cp $ID_CONTAINER:/data_spotify $WORKING_DIR/
 #docker exec $ID_CONTAINER cp /data_spotify $WORKING_DIR
 #+end_src
 
-Una vez que tenemos los archivos en nuestra máquina, ahora sí podemos transformarlos a csv. En el siguiente script podemos ver que tuvimos que limpiar los nombres de los "artists", "albums" y "tracks" (estuvo horrible porque no podíamos insertarlos a Monet porque habían carcterés especiales que no veíamos, fue un dolor de cabeza mientras no sabíamos cuál era el error)
+Una vez que tenemos los archivos ~json~ en nuestra máquina, ahora sí podemos transformarlos a csv. En el siguiente script podemos ver que tuvimos que limpiar los nombres de los "artists", "albums" y "tracks" (estuvo horrible porque no podíamos insertarlos a Monet porque habían carcteres especiales que no veíamos, fue un dolor de cabeza mientras no sabíamos cuál era el error), lo hicimos tanto para los csvs para Monet como los que eran para Neo4j.
 
 #+begin_src sh
 WORKING_DIR=$(pwd)
@@ -667,7 +668,9 @@ Ahora sí ya estamos listos para insertar los datos a Monet y Neo4j :D
 ** MONET
 Primero creamos el contenedor de Docker con la imagen de Monet y creamos la base de datos "spotify".
 
-Luego copiamos los archivos de nuestra máquina dentro del docker para poder incertar los datos a la base de datos de monet. Creamos las tablas y finalmente incertamos los datos.
+Luego copiamos los archivos de nuestra máquina dentro del docker para poder incertar los datos a la base de datos de monet. Creamos las tablas y finalmente incertamos los datos. 
+
+Todas las columanas tienen tipo de dato ~varchar~, esto para evitar errores que requirieran mayor limpieza de datos. Esto no es gran problema pues para las queries (que veremos al final de este documento) podemos castear los datos.
 
 #+begin_src sh
 WORKING_DIR=$(pwd)
@@ -719,9 +722,13 @@ docker exec -i monetdb mclient -d spotify -s "copy offset 2 into track from '/da
 
 ** NEO4J
 Ahora sí, otra pesadilla (horas de programar enajenadamente)
-Primero creamos el contenedor de Docker con la imagen de Neo4j. Hata aquí todo muy bonito, pero luego había que meter los datos al docker (sin perder permisos en el intento :´) y ponerla en una carpeta exacta).
+Primero creamos el contenedor de Docker con la imagen de Neo4j. Hasta aquí todo muy bonito, pero luego había que meter los datos al docker (sin perder permisos en el intento :´) y ponerla en una carpeta exacta).
 
-Luego copiamos los archivos de nuestra máquina dentro del docker para poder incertar los datos a la base de datos de noe4j. Incertamos los datos y finalmente creamos las relaciones entre los nodos.
+Luego copiamos los archivos de nuestra máquina dentro del docker para poder incertar los datos a la base de datos de noe4j. Incertamos los datos y finalmente creamos las relaciones entre los nodos:
+
+1. *Artists y Albums*: a partir del artist_id.
+2. *Tracks y Albums*: a partir del album_id
+3. *Tracks y Artists*; a partir del artist_id
 
 #+begin_src
 WORKING_DIR=$(pwd)
