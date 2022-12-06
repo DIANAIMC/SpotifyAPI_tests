@@ -21,7 +21,7 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
 * API
   Nosotros elegimos la API de Spotify ya que nos parecía divertida (spoiler al final ya ni fue tan divertido) por lo que extrajimos 3 objetos que nos parecieron interesantes para analizar posteriormente, los cuales al extraerlos de la API se ven de la siguiente forma:
 *** Artist:
-  #+begin_src 
+  #+begin_src js
   {
   "artists": {
     "href": "https://api.spotify.com/v1/search?query=2022&type=artist&locale=es-ES%2Ces%3Bq%3D0.9&offset=0&limit=1",
@@ -70,7 +70,7 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
  #+end_src 
 
 *** Album:
-  #+begin_src
+  #+begin_src js
   {
   "albums": {
     "href": "https://api.spotify.com/v1/search?query=2022&type=album&locale=es-ES%2Ces%3Bq%3D0.9&offset=0&limit=1",
@@ -147,7 +147,7 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
   #+end_src
   
 *** Track:
-  #+begin_src
+  #+begin_src js
   {
   "tracks": {
     "href": "https://api.spotify.com/v1/search?query=2022&type=track&locale=es-ES%2Ces%3Bq%3D0.9&offset=0&limit=1",
@@ -292,10 +292,113 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
  Para poder extraer los datos tuvimos varias limitantes:
  1. Spotify solo nos permite extraer como máximo 50 objetos por request
     Iterativamente extraemos de 50 objetos hasta llegar al número de objetos que realmente deseamos.
- 2. De igual forma, solo nos permite extraer hasta 1000 en total por query*
+
+2. De igual forma, solo nos permite extraer hasta 1000 en total por query*
     Por ello decidimos extraer 1000 elementos por objeto para 5 años distintos (cada año es un query diferente)
+ 
  3. Para poder hacer el request necesitamos tener una autorización, un token, el cual tienes que generar con un cuenta de Spotify
     Creamos generamos credenciales de Spotify a partir de una cuenta de Spotify de un integrante del equipo (para fines del proyecto las credenciales están expuestas, pero una vez. Simplemente conecte Spotify Developer a su cuenta de Spotify.
+    
+#+begin_src py
+import requests
+import datetime
+import base64
+import time
+
+from pymongo import MongoClient
+from iteration_utilities import unique_everseen
+
+'''
+get_access_token(client_id, client_secret, token_url)
+'''
+def get_access_token(client_id, client_secret, token_url):
+    token_data = {"grant_type": "client_credentials"}
+    creds = f"{client_id}:{client_secret}"
+    creds_b64 = base64.b64encode(creds.encode())
+    token_headers = {"Authorization": f"Basic {creds_b64.decode()}"}
+
+    r = requests.post(token_url, data=token_data, headers=token_headers)
+    if r.status_code not in range(200, 299):
+        raise Exception("Could not authenticate client.")
+
+    data = r.json()
+    now = datetime.datetime.now()
+    access_token = data['access_token']
+    return access_token
+
+'''
+get_data(access_token, lista, limite, year, type)
+acces_token: token de acceso a api
+lista: lista en la que se desea agregar los datos
+limite: offset máximo
+year: año del que se desea extraer los datos
+type: tipo de dato a extraer (artist, album, track)
+'''
+def get_data(access_token, lista, limite, year, type):
+    offset = 0
+    for _ in range(round(limite/50)):
+        print('.', end='', flush=True)
+        response = requests.get(
+         f'https://api.spotify.com/v1/search?q=year%3A{year}&type={type}&limit=50&offset={offset}',
+            headers={
+                "Authorization": f"Bearer {access_token}",
+                'Content-Type': 'application/json'
+            }
+        )
+        json_resp = response.json()
+        tipo_aux = f"{type}s"
+        if tipo_aux in list(json_resp.keys()):
+            current_data = json_resp[tipo_aux]['items']
+            lista.extend(current_data)
+            offset += 50
+        else:
+            break
+    return lista
+
+client_id = 'af1707ed062448f9aa96ffd1b36737ac'
+client_secret = '017e9f625cc149b8b1e11c69bd21ef1d'
+token_url = "https://accounts.spotify.com/api/token"
+
+access_token = get_access_token(client_id, client_secret, token_url)
+
+anio_inicio = 2018
+anio_fin = 2023
+
+inicio = time.time()
+
+print('Obteniendo artistas…')
+artistas = []
+for year in range(anio_inicio, anio_fin):
+    print(f'\n\tAño {year} ', end='')
+    artistas = get_data(access_token, artistas, 1000, year, 'artist')
+# Limpiamos los artistas para que no haya repetidos
+artistas_final = list(unique_everseen(artistas))
+print(f'\nArtistas encontrados previo a limpieza: {len(artistas)}')
+print(f'Posterior a limpieza: {len(artistas_final)}')
+
+print('\nObteniendo albums…')
+albums = []
+for year in range(anio_inicio, anio_fin):
+    print(f'\n\tAño {year} ', end='')
+    albums = get_data(access_token, albums, 1000, year, 'album')
+# Limpiamos los albums para que no haya repetidos
+albums_final = list(unique_everseen(albums))
+print(f'\nAlbums encontrados previo a limpieza: {len(albums)}')
+print(f'Posterior a limpieza: {len(albums_final)}')
+
+print('\nObteniendo tracks…')
+tracks = []
+for year in range(anio_inicio, anio_fin):
+    print(f'\n\tAño {year} ', end='')
+    tracks = get_data(access_token, tracks, 1000, year, 'track')
+# Limpiamos los tracks para que no haya repetidos
+tracks_final = list(unique_everseen(tracks))
+print(f'\nTracks encontrados previo a limpieza: {len(tracks)}')
+print(f'Posterior a limpieza: {len(tracks_final)}')
+
+fin = time.time()
+# print(f"\nEjecución del programa en minutos: {(fin-inicio)/60}")
+    #+end_src
  
 * MONGO
 * MONET
