@@ -665,6 +665,109 @@ rm $WORKING_DIR/csv/neo4j/tracks.csv
 
 Ahora sí ya estamos listos para insertar los datos a Monet y Neo4j :D
 ** MONET
+Primero creamos el contenedor de Docker con la imagen de Monet y creamos la base de datos "spotify".
+
+Luego copiamos los archivos de nuestra máquina dentro del docker para poder incertar los datos a la base de datos de monet. Creamos las tablas y finalmente incertamos los datos.
+
+#+begin_src sh
+WORKING_DIR=$(pwd)
+WORKING_DIR=$WORKING_DIR/data
+
+echo 'Eliminamos el contendedor monetdb en caso de que ya exista'
+docker stop monetdb > /dev/null
+docker rm monetdb > /dev/null
+
+# Creamos el contenedor con monet
+echo 'Creamos el contenedor'
+docker run -d --name monetdb -p 50001:50000 --mount source=spotify-data,target=/data monetdb/monetdb > /dev/null
+
+# Metemos los datos que queremos adentro del volumen
+echo -e '\nInsertamos al docker archivos csv'
+docker cp $WORKING_DIR/csv/monet monetdb:/data
+
+echo 'Creamos base de datos "spotify"'
+docker exec -it monetdb monetdb create -p monetdb spotify > /dev/null
+
+# Entramos a la base de datos con el mclient
+#echo 'La contrasena es "monetdb"'
+#docker exec -it monetdb mclient -u monetdb -d spotify
+
+# Creamos las tablas de la base de datos.
+echo -e "\nCreamos tablas:"
+
+echo "- Tabla artist"
+docker exec -i monetdb mclient -d spotify -s "create table if not exists artist(followers varchar(100), genre varchar(100),artist_id varchar(100),popularity varchar(100),name varchar(200));"
+
+echo "- Tabla album"
+docker exec -i monetdb mclient -d spotify -s "create table if not exists album(available_market varchar(100),album_id varchar(100),release_date varchar(100),total_tracks varchar(100),name varchar(200));"
+
+echo "- Tabla track"
+docker exec -i monetdb mclient -d spotify -s "create table if not exists track(album_id varchar(100),available_market varchar(100),disc_number varchar(100),duration_ms varchar(100),explicit varchar(100), track_id varchar(50),popularity varchar(50),track_number varchar(50),name varchar(200));"
+
+# Insertamos los datos en las tablas.
+echo -e '\nInsertamos datos en tablas:'
+
+echo '- Datos de artistas'
+docker exec -i monetdb mclient -d spotify -s "copy offset 2 into artist from '/data/monet/artists_mon.csv' on client using delimiters ',',E'\n',E'\"' null as ' ';"
+
+echo '- Datos de albums'
+docker exec -i monetdb mclient -d spotify -s "copy offset 2 into album from '/data/monet/albums_mon.csv' on client using delimiters ',',E'\n',E'\"' null as ' ';"
+
+echo '- Datos de tracks'
+docker exec -i monetdb mclient -d spotify -s "copy offset 2 into track from '/data/monet/tracks_mon.csv' on client using delimiters ',',E'\n',E'\"' null as ' ';"
+#+end_src
+
 ** NEO4J
+Ahora sí, otra pesadilla (horas de programar enajenadamente)
+Primero creamos el contenedor de Docker con la imagen de Neo4j. Hata aquí todo muy bonito, pero luego había que meter los datos al docker (sin perder permisos en el intento :´) y ponerla en una carpeta exacta).
+
+Luego copiamos los archivos de nuestra máquina dentro del docker para poder incertar los datos a la base de datos de noe4j. Incertamos los datos y finalmente creamos las relaciones entre los nodos.
+
+#+begin_src
+WORKING_DIR=$(pwd)
+WORKING_DIR=$WORKING_DIR/data/csv/neo4j
+
+
+#Primero debemos tener la imagen de neo4j en el docker, de no ser así, ejecutamos:
+#docker pull neo4j
+
+#Verificamos que tenemos la imagen
+#docker images| grep neo4j
+
+echo 'Eliminamos el contendedor neo4jdb en caso de que ya exista'
+docker stop neo4jdb > /dev/null
+docker rm neo4jdb > /dev/null
+
+# Creamos el contenedor con neo4j
+echo 'Creamos el contenedor'
+docker run -d --name neo4jdb -p 7474:7474 -p 7687:7687 -v $WORKING_DIR:/var/lib/neo4j/import --env NEO4J_AUTH=neo4j/test neo4j > /dev/null
+
+echo 'Please wait, this will take some time...'
+sleep 15
+echo 'Insertamos al docker archivos csv'
+
+echo -e "\nCreamos Nodos:"
+# Artists
+echo "	> Artists"
+docker exec -t neo4jdb cypher-shell -u neo4j -p test 'LOAD CSV WITH HEADERS FROM "file:///artists_neo.csv" AS row CREATE (n:Artist) SET n = row, n.followers = toInteger(row.followers), n.popularity = toInteger(row.popularity);'
+
+echo "	> Albums"
+docker exec -t neo4jdb cypher-shell -u neo4j -p test 'LOAD CSV WITH HEADERS FROM "file:///albums_neo.csv" AS row CREATE (n:Album) SET n = row, n.releaseDate = date(row.releasedate), n.totalTracks = toInteger(row.totaltracks);'
+
+echo "	> Tracks"
+docker exec -t neo4jdb cypher-shell -u neo4j -p test 'LOAD CSV WITH HEADERS FROM "file:///tracks_neo.csv" AS row CREATE (n:Track) SET n = row, n.discNumber = toInteger(row.discnumber), n.durationMs = toInteger(row.durationms), n.explicit = toBoolean(row.explicit), n.popularity = toInteger(row.popularity), n.trackNumber = toInteger(row.tracknumber);'
+
+
+echo -e "\nCreamos relaciones entre nodos:"
+
+echo "	> Edges entre Artists y Albums"
+docker exec -t neo4jdb cypher-shell -u neo4j -p test 'MATCH (ar:Artist),(al:Album) WHERE ar.artistid = al.artistid CREATE (al)-[:ALBUM_OF_ARTIST]->(ar)'
+
+echo "	> Edges entre Tracks y Albums"
+docker exec -t neo4jdb cypher-shell -u neo4j -p test 'MATCH (t:Track),(al:Album) WHERE t.albumid = al.albumid CREATE (t)-[:TRACK_OF_ALBUM]->(al)'
+
+echo "	> Edges entre Tracks y Artists"
+docker exec -t neo4jdb cypher-shell -u neo4j -p test 'MATCH (t:Track),(ar:Artist) WHERE t.artistid = ar.artistid CREATE (t)-[:TRACK_OF_ARTIST]->(ar)'
+#+end_src
 
 * Queries analíticas
