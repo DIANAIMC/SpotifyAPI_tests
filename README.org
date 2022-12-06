@@ -16,7 +16,7 @@ Proyecto Final: Bases de Datos No Relacionales
 ./main.sh
 #+end_src
 
-Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en Mongo, Monet y Neo4j
+Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en Mongo, Monet y Neo4j. Para ver las queries analíticas ir al final del archivo.
 
 Si es que vamos a correr los "cachos" de código, entonces hay que empezar haciendo este:
 
