@@ -11,12 +11,24 @@ Proyecto Final: Bases de Datos No Relacionales
 * Desarrollo
   A continuación explicaremos detalladamente el código por partes. Si se desea correr todo el proyecto, ejecute los siguientes comandos:
 
-#+begin_src shell
+#+begin_src sh
 ./requirements.txt
 ./main.sh
 #+end_src
 
 Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en Mongo, Monet y Neo4j
+
+Si es que vamos a correr los "cachos" de código, entonces hay que empezar haciendo este:
+
+#+begin_src sh
+CURRENT_DIR=$(pwd)
+
+
+mkdir -p $CURRENT_DIR/data
+mkdir -p $CURRENT_DIR/data/csv
+mkdir -p $CURRENT_DIR/data/csv/monet
+mkdir -p $CURRENT_DIR/data/csv/neo4j
+#+end_src
 
 * Extracción de datos - API
   Nosotros elegimos la API de Spotify ya que nos parecía divertida (spoiler al final ya ni fue tan divertido) por lo que extrajimos 3 objetos que nos parecieron interesantes para analizar posteriormente, los cuales al extraerlos de la API se ven de la siguiente forma:
@@ -435,7 +447,7 @@ my_collection3.insert_many(tracks_final)
 
 ~Nota:~ Para que este código funcione, debe correrse junto al anterior y asegurarse que el contenedor de Mongo en Docker ya esté funcionando, lo cual el "main.sh" lo hace a través del siguiente script:
 
-#+begin_src
+#+begin_src sh
 # Paramos y eliminamos el contenedor en caso de que ya exista
 echo 'Eliminamos el contendedor spotify en caso de que ya exista'
 docker stop spotify > /dev/null
@@ -463,6 +475,195 @@ docker exec -it spotify mongosh --quiet \
 > /dev/null
 #+end_src
 
+*Transformamos los datos*
+Una vez insertados los datos, debemos extraer nuevamente los datos correspondientes para insertarlos a una base de datos en Monet y otra en Neo4j, para ello tomamos 2 decisiones clave:
+
+1. Hacer ~unwind~ a "artist" sobre sus géneros, ~unwind~ a "album" y a "track" sobre ~available_markets~ con el fin de análisar los géneros de los artistas y los paises donde las canciones y albumes se encuentran disponibles. Por la naturaleza de dichos objetos, habrán muchísimos elementos repetidos y qué mejor lugar para hacer la analítica que *Monet*
+2. Hacer ~unwind~ a "album" y a "track" sobre ~artists_id~ con el fin de análizar las relaciones entre "artists", "albums" y "tracks". Y qué mejor lugar para hacer la analítica de relaciones entre objetos que en *Neo4j*
+
+Para ello, ejecutamos el siguiente script:
+
+#+begin_src sh
+# PARA MONET
+
+echo "Unwinds para Monet:"
+
+echo -e "\n\tArtists -> géneros"
+# Hacemos el unwind de los artistas sobre los géneros
+docker exec -it spotify mongosh --quiet \
+--eval 'use spotify' \
+--eval 'db.artists.aggregate([{$unwind:"$genres"}, {$project:{_id:0}}, {$out:"uw_artists_mon"}])'
+
+echo -e "\tAlbums -> 'available markets'"
+# Hacemos el unwind de albums sobre available_markets
+docker exec -it spotify mongosh --quiet \
+--eval 'use spotify' \
+--eval 'db.albums.aggregate([{$unwind:"$available_markets"}, {$project:{_id:0}}, {$out:"uw_albums_mon"}])'
+
+echo -e "\tTracks -> 'available markets'"
+# Hacemos el unwind de tracks sobre available_markets
+docker exec -it spotify mongosh --quiet \
+--eval 'use spotify' \
+--eval 'db.tracks.aggregate([{$unwind:"$available_markets"}, {$project: {_id:0}}, {$out:"uw_tracks_mon"}])'
+
+# ------------------------------------------------------------------------------------------
+
+# PARA NEO4J
+
+echo -e "\nUnwinds para Neo4j"
+
+echo -e "\n\tArtists -> géneros"
+
+# Hacemos el unwind de los artistas sobre los géneros
+docker exec -it spotify mongosh --quiet \
+--eval 'use spotify' \
+--eval 'db.artists.aggregate([{$project:{_id:0}}, {$out:"uw_artists_neo"}])' 
+
+echo -e "\tAlbums ->  artists"
+# Hacemos el unwind de albums sobre available_markets
+docker exec -it spotify mongosh --quiet \
+--eval 'use spotify' \
+--eval 'db.albums.aggregate([{$unwind:"$artists"}, {$project:{_id:0}}, {$out:"uw_albums_neo"}])'
+
+echo -e "\tTracks -> artists"
+# Hacemos el unwind de tracks sobre available_markets
+docker exec -it spotify mongosh --quiet \
+--eval 'use spotify' \
+--eval 'db.tracks.aggregate([{$unwind:"$artists"}, {$project: {_id:0}}, {$out:"uw_tracks_neo"}])' 
+#+end_src
+
+Una vez hechos los ~unwind~ e insertarlos a nuevas colecciones, estas las extraemos como ~.json~ y posteriormente dichos archivos los tranformamos a csv. Nótese que como Mongo está en un contenedor de Docker, debemos sacar dichos archivos de Docker para tener acceso a ellos en nuestra computadora.
+
+#+begin_src sh
+# Nota: esto supone que los datos ya están cargados en un docker
+WORKING_DIR=$(pwd)
+WORKING_DIR=$WORKING_DIR/data
+
+# Encendemos el docker por si no estaba
+CONTAINER_NAME='spotify'
+# docker start $CONTAINER_NAME
+
+# Corremos el script para generar los datos con unwind
+#./scripts/make_unwinds.sh
+
+# Creamos una carpeta en el contenedor para guardar las colecciones que vayamos bajando
+docker exec $CONTAINER_NAME mkdir -p data_spotify
+
+# Exportamos los datos de la base de datos a un archivo .json
+# Ese archivo sigue dentro de la terminal del contenedor docker
+DATA_BASE_NAME='spotify'
+
+echo "Exportamos archivos json para Monet"
+
+COLLECTION_NAME='uw_albums_mon'
+OUTPUT_FILE='/data_spotify/albums_mon.json'
+docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
+echo -e '\n'
+
+# Extraemos los artistas
+COLLECTION_NAME='uw_artists_mon'
+OUTPUT_FILE='/data_spotify/artists_mon.json'
+docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
+echo -e '\n'
+
+# Extraemos las canciones
+COLLECTION_NAME='uw_tracks_mon'
+OUTPUT_FILE='/data_spotify/tracks_mon.json'
+docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
+echo -e '\n'
+
+echo "Exportamos archivos json para Neo4j"
+
+COLLECTION_NAME='uw_albums_neo'
+OUTPUT_FILE='/data_spotify/albums_neo.json'
+docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
+echo -e '\n'
+
+# Extraemos los artistas
+COLLECTION_NAME='uw_artists_neo'
+OUTPUT_FILE='/data_spotify/artists_neo.json'
+docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
+echo -e '\n'
+
+# Extraemos las canciones
+COLLECTION_NAME='uw_tracks_neo'
+OUTPUT_FILE='/data_spotify/tracks_neo.json'
+docker exec $CONTAINER_NAME mongoexport -d $DATA_BASE_NAME -c $COLLECTION_NAME --out $OUTPUT_FILE > /dev/null
+echo -e '\n'
+
+# Ahora que el archivo está en la terminal del contenedor, tenemos que sacarlo de ahí
+# Necesitamos el ID del contenedor
+ID_CONTAINER=$(docker ps -aqf "name=$CONTAINER_NAME")
+docker cp $ID_CONTAINER:/data_spotify $WORKING_DIR/
+#docker exec $ID_CONTAINER cp /data_spotify $WORKING_DIR
+#+end_src
+
+Una vez que tenemos los archivos en nuestra máquina, ahora sí podemos transformarlos a csv. En el siguiente script podemos ver que tuvimos que limpiar los nombres de los "artists", "albums" y "tracks" (estuvo horrible porque no podíamos insertarlos a Monet porque habían carcterés especiales que no veíamos, fue un dolor de cabeza mientras no sabíamos cuál era el error)
+
+#+begin_src sh
+WORKING_DIR=$(pwd)
+WORKING_DIR=$WORKING_DIR/data
+
+echo "Obtenemos archivos csv para Monet"
+
+echo 'followers,genre,artist_id,popularity,namee' > $WORKING_DIR/csv/monet/artists.csv
+echo 'available_market,album_id,release_date,total_tracks,namee' > $WORKING_DIR/csv/monet/albums.csv
+echo 'album_id,available_market,disc_number,duration_ms,explicit,track_id,popularity,track_number,namee' > $WORKING_DIR/csv/monet/tracks.csv 
+
+echo -e '\n\t- Convirtiendo artistas'
+jq -r '[.followers.total, .genres, .id, .popularity, .name] | @csv' $WORKING_DIR/data_spotify/artists_mon.json | awk -F, '{printf "%s,%s,%s,%s,%s\n", $1, $2, $3, $4, $5}' >> $WORKING_DIR/csv/monet/artists.csv
+echo -e '\t- Convirtiendo albums'
+jq -r '[.available_markets, .id, .release_date, .total_tracks, .name] | @csv' $WORKING_DIR/data_spotify/albums_mon.json | awk -F, '{printf "%s,%s,%s, %s,%s\n", $1, $2, $3, $4, $5}' >> $WORKING_DIR/csv/monet/albums.csv
+echo -e '\t- Convirtiendo tracks'
+jq -r '[.album.id, .available_markets, .disc_number, .duration_ms, .explicit, .id, .popularity, .track_number, .name] | @csv' $WORKING_DIR/data_spotify/tracks_mon.json | awk -F, '{printf "%s,%s,%s,%s,%s,%s,%s,%s,%s\n", $1, $2, $3, $4, $5, $6, $7, $8, $9}' >> $WORKING_DIR/csv/monet/tracks.csv
+ 
+#Ahora vamos a agregar las comillas de cierre que falten a los nombres de artista, album y track.
+#Ademas realizamos la limpieza de los datos de caracteres especiales e indeseados.
+#(Esto pasa porque hay artistas, albumes y tracks que tienen comas en su nombre)
+
+#Artists
+cat $WORKING_DIR/csv/monet/artists.csv | sed 's/.$//' | sed 's/$/"/' | sed '1s/.$//' | sed "$ d" | sed 's/"//g' | sed 's/\r/\\r/g' | sed 's/\\//g' | sed "s/[#|$|%|*|@|&|'|-|_|¿|?|+|=]//g" | sed 's/[^a-zA-Z0-9, -]//g' > $WORKING_DIR/csv/monet/artists_mon.csv
+#Albums
+cat $WORKING_DIR/csv/monet/albums.csv | sed 's/.$//' | sed 's/$/"/' | sed '1s/.$//' | sed "$ d" | sed 's/"//g' | sed 's/\r/\\r/g' | sed 's/\\//g' | sed "s/[#|$|%|*|@|&|'|-|_|¿|?|+|=]//g" | sed 's/[^a-zA-Z0-9, -]//g' > $WORKING_DIR/csv/monet/albums_mon.csv
+#Tracks
+cat $WORKING_DIR/csv/monet/tracks.csv | sed 's/.$//' | sed 's/$/"/' | sed '1s/.$//' | sed "$ d" | sed 's/"//g' | sed 's/\r/\\r/g' | sed 's/\\//g' | sed "s/[#|$|%|*|@|&|'|-|_|¿|?|+|=]//g" | sed 's/[^a-zA-Z0-9, -]//g' > $WORKING_DIR/csv/monet/tracks_mon.csv
+
+#Eliminamos los csv auxiliares
+rm $WORKING_DIR/csv/monet/artists.csv
+rm $WORKING_DIR/csv/monet/albums.csv
+rm $WORKING_DIR/csv/monet/tracks.csv
+
+echo -e "\nObtenemos archivos csv para Neo4j"
+
+echo 'followers,artist_id,popularity,namee' > $WORKING_DIR/csv/neo4j/artists.csv
+echo 'artist_id,album_id,release_date,total_tracks,namee' > $WORKING_DIR/csv/neo4j/albums.csv
+echo 'album_id,artist_id,disc_number,duration_ms,explicit,track_id,popularity,track_number,namee' > $WORKING_DIR/csv/neo4j/tracks.csv 
+
+echo -e '\n\t- Convirtiendo artistas'
+jq -r '[.followers.total, .id, .popularity, .name] | @csv' $WORKING_DIR/data_spotify/artists_neo.json | awk -F, '{printf "%s,%s,%s,%s\n", $1, $2, $3, $4}' >> $WORKING_DIR/csv/neo4j/artists.csv
+echo -e '\t- Convirtiendo albums'
+jq -r '[.artists.id, .id, .release_date, .total_tracks, .name] | @csv' $WORKING_DIR/data_spotify/albums_neo.json | awk -F, '{printf "%s,%s,%s, %s,%s\n", $1, $2, $3, $4, $5}' >> $WORKING_DIR/csv/neo4j/albums.csv
+echo -e '\t- Convirtiendo tracks'
+jq -r '[.album.id, .artists.id, .disc_number, .duration_ms, .explicit, .id, .popularity, .track_number, .name] | @csv' $WORKING_DIR/data_spotify/tracks_neo.json | awk -F, '{printf "%s,%s,%s,%s,%s,%s,%s,%s,%s\n", $1, $2, $3, $4, $5, $6, $7, $8, $9}' >> $WORKING_DIR/csv/neo4j/tracks.csv
+ 
+#Ahora vamos a agregar las comillas de cierre que falten a los nombres de artista, album y track.
+#Ademas realizamos la limpieza de los datos de caracteres especiales e indeseados.
+#(Esto pasa porque hay artistas, albumes y tracks que tienen comas en su nombre)
+
+#Artists
+cat $WORKING_DIR/csv/neo4j/artists.csv | sed 's/.$//' | sed 's/$/"/' | sed '1s/.$//' | sed "$ d" | sed 's/"//g' | sed 's/\r/\\r/g' | sed 's/\\//g' | sed "s/[#|$|%|*|@|&|'|-|_|¿|?|+|=]//g" | sed 's/[^a-zA-Z0-9, -]//g' > $WORKING_DIR/csv/neo4j/artists_neo.csv
+#Albums
+cat $WORKING_DIR/csv/neo4j/albums.csv | sed 's/.$//' | sed 's/$/"/' | sed '1s/.$//' | sed "$ d" | sed 's/"//g' | sed 's/\r/\\r/g' | sed 's/\\//g' | sed "s/[#|$|%|*|@|&|'|-|_|¿|?|+|=]//g" | sed 's/[^a-zA-Z0-9, -]//g' > $WORKING_DIR/csv/neo4j/albums_neo.csv
+#Tracks
+cat $WORKING_DIR/csv/neo4j/tracks.csv | sed 's/.$//' | sed 's/$/"/' | sed '1s/.$//' | sed "$ d" | sed 's/"//g' | sed 's/\r/\\r/g' | sed 's/\\//g' | sed "s/[#|$|%|*|@|&|'|-|_|¿|?|+|=]//g" | sed 's/[^a-zA-Z0-9, -]//g' > $WORKING_DIR/csv/neo4j/tracks_neo.csv
+
+#Eliminamos los csv auxiliares
+rm $WORKING_DIR/csv/neo4j/artists.csv
+rm $WORKING_DIR/csv/neo4j/albums.csv
+rm $WORKING_DIR/csv/neo4j/tracks.csv
+#+end_src
+
+Ahora sí ya estamos listos para insertar los datos a Monet y Neo4j :D
 ** MONET
 ** NEO4J
 
