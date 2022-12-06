@@ -291,18 +291,22 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
   
  En el siguiente escript nos encargamos de extraer 1000 (si es que hay) elementos de "artists", "albums" y "tracks" durante 5 años, en particular, entre el 2018 y el 2022.
  
- *Para poder extraer los datos tuvimos varias limitantes:*
+**** Para poder extraer los datos tuvimos varias limitantes:
  
-1. Spotify solo nos permite extraer como máximo 50 objetos por request.
- Iterativamente extraemos 50 objetos hasta llegar al número de objetos que realmente deseamos.
- 
-2. De igual forma, solo nos permite extraer hasta 1000 elementos en total por query*.
- Por ello decidimos extraer 1000 elementos por objeto para 5 años distintos (cada año es un query diferente).
- 
-3. Para poder hacer el request necesitamos tener una autorización, un token, el cual tienes que generar con un cuenta de Spotify.
-Generamos credenciales de Spotify a partir de una cuenta de Spotify de un integrante del equipo (para fines del proyecto las credenciales están expuestas, pero una vez que el proyecto sea calificado se removerán). Dichas credenciales nos permiten generar un un token de autenticación por cada ejecución del proyecto.
-    
- 4. Una vez obtenidos los elementos notamos que había repetidos pues Spotify te brinda los artistas de forma aleatoria y al no seguir un orden puede que nos por ejecución más de un elemento.
+*1. Spotify solo nos permite extraer como máximo 50 objetos por request:*
+
+  Iterativamente extraemos 50 objetos hasta llegar al número de objetos que realmente deseamos.
+  
+*2. De igual forma, solo nos permite extraer hasta 1000 elementos en total por query:*
+
+  Por ello decidimos extraer 1000 elementos por objeto para 5 años distintos (cada año es un query diferente).
+  
+*3. Para poder hacer el request necesitamos tener una autorización, un token, el cual tienes que generar con un cuenta de Spotify:*
+
+  Generamos credenciales de Spotify a partir de una cuenta de Spotify de un integrante del equipo (para fines del proyecto las credenciales están expuestas, pero una vez que el proyecto sea calificado se removerán). Dichas credenciales nos permiten generar un un token de autenticación por cada ejecución del proyecto. 
+
+*4. Una vez obtenidos los elementos notamos que había repetidos pues Spotify te brinda los artistas de forma aleatoria y al no seguir un orden puede que nos por ejecución más de un elemento.*
+
  Con la librería iteration_utilities pudimos eliminar fácilmente aquellos elementos repetidos de la lista de jsons.
  
 #+begin_src py
