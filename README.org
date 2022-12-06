@@ -19,6 +19,282 @@ Proyecto Final: Bases de Datos No Relacionales
 Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en Mongo, Monet y Neo4j
 
 * API
+  Nosotros elegimos la API de Spotify ya que nos parecía divertida (spoiler al final ya ni fue tan divertido) por lo que extrajimos 3 objetos que nos parecieron interesantes para analizar posteriormente, los cuales al extraerlos de la API se ven de la siguiente forma:
+  ***Artist:
+  {
+  "artists": {
+    "href": "https://api.spotify.com/v1/search?query=2022&type=artist&locale=es-ES%2Ces%3Bq%3D0.9&offset=0&limit=1",
+    "items": [
+      {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/artist/4nKf2r4jBRR6iz4OqjllNs"
+        },
+        "followers": {
+          "href": null,
+          "total": 217
+        },
+        "genres": [],
+        "href": "https://api.spotify.com/v1/artists/4nKf2r4jBRR6iz4OqjllNs",
+        "id": "4nKf2r4jBRR6iz4OqjllNs",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/ab67616d0000b273563867731ebd689ae6cb46ae",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/ab67616d00001e02963bdfec6eeb8a749d2114bc",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/ab67616d00004851963bdfec6eeb8a749d2114bc",
+            "width": 64
+          }
+        ],
+        "name": "2022 Studio Cast of Bliss",
+        "popularity": 27,
+        "type": "artist",
+        "uri": "spotify:artist:4nKf2r4jBRR6iz4OqjllNs"
+      }
+    ],
+    "limit": 1,
+    "next": "https://api.spotify.com/v1/search?query=2022&type=artist&locale=es-ES%2Ces%3Bq%3D0.9&offset=1&limit=1",
+    "offset": 0,
+    "previous": null,
+    "total": 297
+  }
+}
+ #+begin_src 
+
+  ***Album:
+  #+end_src
+  {
+  "albums": {
+    "href": "https://api.spotify.com/v1/search?query=2022&type=album&locale=es-ES%2Ces%3Bq%3D0.9&offset=0&limit=1",
+    "items": [
+      {
+        "album_type": "single",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/6HaGTQPmzraVmaVxvz6EUc"
+            },
+            "href": "https://api.spotify.com/v1/artists/6HaGTQPmzraVmaVxvz6EUc",
+            "id": "6HaGTQPmzraVmaVxvz6EUc",
+            "name": "Jung Kook",
+            "type": "artist",
+            "uri": "spotify:artist:6HaGTQPmzraVmaVxvz6EUc"
+          },
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/3Nrfpe0tUJi4K4DXYWgMUX"
+            },
+            "href": "https://api.spotify.com/v1/artists/3Nrfpe0tUJi4K4DXYWgMUX",
+            "id": "3Nrfpe0tUJi4K4DXYWgMUX",
+            "name": "BTS",
+            "type": "artist",
+            "uri": "spotify:artist:3Nrfpe0tUJi4K4DXYWgMUX"
+          }
+        ],
+        "available_markets": [
+          "AD",
+          "AE",
+          "AG",
+          "AL",
+          "AM",
+          ...
+        ],
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/0gr5OmB74UhoANEXwYT3gE"
+        },
+        "href": "https://api.spotify.com/v1/albums/0gr5OmB74UhoANEXwYT3gE",
+        "id": "0gr5OmB74UhoANEXwYT3gE",
+        "images": [
+          {
+            "height": 640,
+            "url": "https://i.scdn.co/image/ab67616d0000b273ef57183066d6cac0cabb85c6",
+            "width": 640
+          },
+          {
+            "height": 300,
+            "url": "https://i.scdn.co/image/ab67616d00001e02ef57183066d6cac0cabb85c6",
+            "width": 300
+          },
+          {
+            "height": 64,
+            "url": "https://i.scdn.co/image/ab67616d00004851ef57183066d6cac0cabb85c6",
+            "width": 64
+          }
+        ],
+        "name": "Dreamers [Music from the FIFA World Cup Qatar 2022 Official Soundtrack]",
+        "release_date": "2022-11-20",
+        "release_date_precision": "day",
+        "total_tracks": 1,
+        "type": "album",
+        "uri": "spotify:album:0gr5OmB74UhoANEXwYT3gE"
+      }
+    ],
+    "limit": 1,
+    "next": "https://api.spotify.com/v1/search?query=2022&type=album&locale=es-ES%2Ces%3Bq%3D0.9&offset=1&limit=1",
+    "offset": 0,
+    "previous": null,
+    "total": 10002
+  }
+}
+  #+end_src
+  ***Track:
+  #+end_src
+  {
+  "tracks": {
+    "href": "https://api.spotify.com/v1/search?query=2022&type=track&locale=es-ES%2Ces%3Bq%3D0.9&offset=0&limit=1",
+    "items": [
+      {
+        "album": {
+          "album_type": "single",
+          "artists": [
+            {
+              "external_urls": {
+                "spotify": "https://open.spotify.com/artist/6HaGTQPmzraVmaVxvz6EUc"
+              },
+              "href": "https://api.spotify.com/v1/artists/6HaGTQPmzraVmaVxvz6EUc",
+              "id": "6HaGTQPmzraVmaVxvz6EUc",
+              "name": "Jung Kook",
+              "type": "artist",
+              "uri": "spotify:artist:6HaGTQPmzraVmaVxvz6EUc"
+            },
+            {
+              "external_urls": {
+                "spotify": "https://open.spotify.com/artist/3Nrfpe0tUJi4K4DXYWgMUX"
+              },
+              "href": "https://api.spotify.com/v1/artists/3Nrfpe0tUJi4K4DXYWgMUX",
+              "id": "3Nrfpe0tUJi4K4DXYWgMUX",
+              "name": "BTS",
+              "type": "artist",
+              "uri": "spotify:artist:3Nrfpe0tUJi4K4DXYWgMUX"
+            }
+          ],
+          "available_markets": [
+            "AD",
+            "AE",
+            "AG",
+            "AL",
+            "AM",
+            "AO",
+            "AR",
+            "AT",
+            ...
+          ],
+          "external_urls": {
+            "spotify": "https://open.spotify.com/album/0gr5OmB74UhoANEXwYT3gE"
+          },
+          "href": "https://api.spotify.com/v1/albums/0gr5OmB74UhoANEXwYT3gE",
+          "id": "0gr5OmB74UhoANEXwYT3gE",
+          "images": [
+            {
+              "height": 640,
+              "url": "https://i.scdn.co/image/ab67616d0000b273ef57183066d6cac0cabb85c6",
+              "width": 640
+            },
+            {
+              "height": 300,
+              "url": "https://i.scdn.co/image/ab67616d00001e02ef57183066d6cac0cabb85c6",
+              "width": 300
+            },
+            {
+              "height": 64,
+              "url": "https://i.scdn.co/image/ab67616d00004851ef57183066d6cac0cabb85c6",
+              "width": 64
+            }
+          ],
+          "name": "Dreamers [Music from the FIFA World Cup Qatar 2022 Official Soundtrack]",
+          "release_date": "2022-11-20",
+          "release_date_precision": "day",
+          "total_tracks": 1,
+          "type": "album",
+          "uri": "spotify:album:0gr5OmB74UhoANEXwYT3gE"
+        },
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/6HaGTQPmzraVmaVxvz6EUc"
+            },
+            "href": "https://api.spotify.com/v1/artists/6HaGTQPmzraVmaVxvz6EUc",
+            "id": "6HaGTQPmzraVmaVxvz6EUc",
+            "name": "Jung Kook",
+            "type": "artist",
+            "uri": "spotify:artist:6HaGTQPmzraVmaVxvz6EUc"
+          },
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/3Nrfpe0tUJi4K4DXYWgMUX"
+            },
+            "href": "https://api.spotify.com/v1/artists/3Nrfpe0tUJi4K4DXYWgMUX",
+            "id": "3Nrfpe0tUJi4K4DXYWgMUX",
+            "name": "BTS",
+            "type": "artist",
+            "uri": "spotify:artist:3Nrfpe0tUJi4K4DXYWgMUX"
+          },
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/5C01hDqpEmrmDfUhX9YWsH"
+            },
+            "href": "https://api.spotify.com/v1/artists/5C01hDqpEmrmDfUhX9YWsH",
+            "id": "5C01hDqpEmrmDfUhX9YWsH",
+            "name": "FIFA Sound",
+            "type": "artist",
+            "uri": "spotify:artist:5C01hDqpEmrmDfUhX9YWsH"
+          }
+        ],
+        "available_markets": [
+          "AD",
+          "AE",
+          "AG",
+          "AL",
+          "AM",
+          "AO",
+          "AR",
+          "AT",
+          ...
+        ],
+        "disc_number": 1,
+        "duration_ms": 201391,
+        "explicit": false,
+        "external_ids": {
+          "isrc": "QZNMY2232113"
+        },
+        "external_urls": {
+          "spotify": "https://open.spotify.com/track/1RDvyOk4WtPCtoqciJwVn8"
+        },
+        "href": "https://api.spotify.com/v1/tracks/1RDvyOk4WtPCtoqciJwVn8",
+        "id": "1RDvyOk4WtPCtoqciJwVn8",
+        "is_local": false,
+        "name": "Dreamers [Music from the FIFA World Cup Qatar 2022 Official Soundtrack]",
+        "popularity": 91,
+        "preview_url": "https://p.scdn.co/mp3-preview/823c1a9c7d369229606c936174b152479fa92e0f?cid=774b29d4f13844c495f206cafdad9c86",
+        "track_number": 1,
+        "type": "track",
+        "uri": "spotify:track:1RDvyOk4WtPCtoqciJwVn8"
+      }
+    ],
+    "limit": 1,
+    "next": "https://api.spotify.com/v1/search?query=2022&type=track&locale=es-ES%2Ces%3Bq%3D0.9&offset=1&limit=1",
+    "offset": 0,
+    "previous": null,
+    "total": 10002
+  }
+}
+  #+end_src
+  
+ Para poder extraer los datos tuvimos varias limitantes:
+ 1. Spotify solo nos permite extraer como máximo 50 objetos por request
+    Iterativamente extraemos de 50 objetos hasta llegar al número de objetos que realmente deseamos.
+ 2. De igual forma, solo nos permite extraer hasta 1000 en total por query*
+    Por ello decidimos extraer 1000 elementos por objeto para 5 años distintos (cada año es un query diferente)
+ 3. Para poder hacer el request necesitamos tener una autorización, un token, el cual tienes que generar con un cuenta de Spotify
+    Creamos generamos credenciales de Spotify a partir de una cuenta de Spotify de un integrante del equipo (para fines del proyecto las credenciales están expuestas, pero una vez. Simplemente conecte Spotify Developer a su cuenta de Spotify.
+ 
 * MONGO
 * MONET
 * NEO4J
