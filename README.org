@@ -69,7 +69,7 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
 }
  #+end_src 
 
-  *** Album:
+*** Album:
   #+begin_src
   {
   "albums": {
@@ -145,7 +145,8 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
   }
 }
   #+end_src
-  *** Track:
+  
+*** Track:
   #+begin_src
   {
   "tracks": {
