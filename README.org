@@ -9,8 +9,22 @@
 Proyecto Final: Bases de Datos No Relacionales
 
 * Introducción
-Este es el repositorio con el contenido del proyecto finall para la clase de Bases de Datos No Relacionales de la Licenciatura en Ciencia de Datos del ITAM,
-.
+  Este es el repositorio con el contenido del proyecto final para la clase de Bases de Datos No Relacionales de la Licenciatura en Ciencia de Datos del ITAM. 
+  
+* Objetivo
+  Buscar alguna API que llame la atención al equipo, con esta API, conectarla através de python con una base de datos MongoDB. Posteriormente, hacer un ETL que cargue la base de datos procesada a una base de datos columnar y a una base de datos estilo grafo; evidentemente las transformaciones y los subconjuntos de datos ocupados serán diferentes para cada base de datos ya que tienen fines diferentes cada una.
+
+* Desarrollo
+
+A continuación explicaremos detalladamente el código por partes. Si se desea correr todo el proyecto, ejecute los siguientes comandos:
+
+#+begin_src shell
+./requirements.txt
+./main.sh
+#+end_src
+
+Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en Mongo, Monet y Neo4j
+
 ** Objetivos:
 Aquí poner lo que ponga el profe :)
 
