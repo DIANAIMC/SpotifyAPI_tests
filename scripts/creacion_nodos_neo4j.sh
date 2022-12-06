@@ -15,10 +15,10 @@ docker exec -t neo4jdb cypher-shell -u neo4j -p test 'LOAD CSV WITH HEADERS FROM
 echo -e "\nCreamos relaciones entre nodos:"
 
 echo "	> Edges entre Artists y Albums"
-docker exec -t neo4jdb cypher-shell -u neo4j -p test 'MATCH (ar:Artist),(al:Album) WHERE ar.artistid = al.artistid CREATE (al)-[:ALBUM_OF]->(ar)'
+docker exec -t neo4jdb cypher-shell -u neo4j -p test 'MATCH (ar:Artist),(al:Album) WHERE ar.artistid = al.artistid CREATE (al)-[:ALBUM_OF_ARTIST]->(ar)'
 
 echo "	> Edges entre Tracks y Albums"
 docker exec -t neo4jdb cypher-shell -u neo4j -p test 'MATCH (t:Track),(al:Album) WHERE t.albumid = al.albumid CREATE (t)-[:TRACK_OF_ALBUM]->(al)'
 
-echo "	> Edges entre Tracks y Albums"
+echo "	> Edges entre Tracks y Artists"
 docker exec -t neo4jdb cypher-shell -u neo4j -p test 'MATCH (t:Track),(ar:Artist) WHERE t.artistid = ar.artistid CREATE (t)-[:TRACK_OF_ARTIST]->(ar)'
