@@ -13,6 +13,7 @@ Proyecto Final: Bases de Datos No Relacionales
 
 #+begin_src sh
 # También se requiere del comando jq
+# Se sugiere AMPLIAMENTE trabajar con el main.sh
 pip install -r requirements.txt
 ./main.sh
 #+end_src
