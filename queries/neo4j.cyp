@@ -11,3 +11,13 @@ RETURN t.name as track_name, t.popularity,
 COUNT(DISTINCT a.name) as num_artists
 ORDER BY num_artists DESC
 LIMIT 10;
+
+// Query para encontrar todas las canciones que tienen en su nombre la palabra "Love" y obtener
+// la lista de colaboradores de dicha canción (si es que tiene).
+match (t:Track)<-[:TRACK_OF_ARTIST]->(a:Artist)
+where t.name contains "Love" and not t.name contains "feat"
+return distinct t.name as track_name, a.name as artist_name,
+CASE
+    WHEN size(collect(distinct(a.name))) > 1 THEN collect(distinct(a.name))
+    ELSE []
+END AS colab;
