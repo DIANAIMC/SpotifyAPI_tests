@@ -676,3 +676,13 @@ WITH ar2.name AS artista, collect(distinct(ar1.name)) AS colaboraciones
 RETURN artista, size(colaboraciones) AS total_colabs, colaboraciones
 ORDER BY total_colabs DESC;
 #+end_src
+
+2. A continuación estamos consultando las 10 canciones en las cuales colaboraron más artistas. También nos muestra la popularidasd de dicha canción, con el fin de relacionar el número de colaboraciones con la popularidad de la canción
+
+#+begin_src cypher
+MATCH (t:Track)<-[ta:TRACK_OF_ARTIST]->(a:Artist) 
+RETURN t.name as track_name, t.popularity, 
+COUNT(DISTINCT a.name) as num_artists
+ORDER BY num_artists DESC
+LIMIT 10;
+#+end_src
