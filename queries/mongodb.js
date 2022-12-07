@@ -31,3 +31,13 @@ db.tracks.aggregate([
       }
    }
 ]);
+
+// Query para encontrar el promedio de followers que tiene cada género y lo ordenamos.
+// El género "barbadian pop" fue el que más se escuchó.
+db.artists.aggregate([
+    { $unwind : '$genres' },
+    { $match: { genres: { $in: [/pop/,/rock/,/r&b/,/rap/,/electronic/,/hip hop/,/country/,/latin/,/indie/,/soul/,
+                                /reggaeton/,/metal/,/reggae/,/salsa/,/trap/,/banda/,/alt/,/grunge/,/funk/] } } },
+    { $group:{_id: "$genres", prom_followers:{ $avg: "$followers.total" } } },
+    { $project:{_id:0, "genero":"$_id", prom_followers:{ $round: ["$prom_followers", 2] }}}
+]).sort({"prom_followers":-1});
