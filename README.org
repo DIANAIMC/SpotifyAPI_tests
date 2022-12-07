@@ -619,7 +619,7 @@ docker exec -t neo4jdb cypher-shell -u neo4j -p test 'MATCH (t:Track),(ar:Artist
 
 * Queries analíticas
 ** Mongo
-1. El primer query sirve para observar si hay alguna relación entre la duración de la canción y la popularidad de la misma (la popularidad va de 0 a 100, este último la máxima popularidad). El output de esta consulta es el promedio de los promedios de la duración de las canciones por popularidad de las 10 popularidades con mayor duración en sus canciones (averageAvgTime), a su vez también regresa el promedio de dichas popularidades (averagePopularity). Por ejemplo: si averagePopularity está por arriba de 50, podemos notar decir que hay una relación positiva de la popularidad y la duración de la canción. 
+- El primer query sirve para observar si hay alguna relación entre la duración de la canción y la popularidad de la misma (la popularidad va de 0 a 100, este último la máxima popularidad). El output de esta consulta es el promedio de los promedios de la duración de las canciones por popularidad de las 10 popularidades con mayor duración en sus canciones (averageAvgTime), a su vez también regresa el promedio de dichas popularidades (averagePopularity). Por ejemplo: si averagePopularity está por arriba de 50, podemos notar decir que hay una relación positiva de la popularidad y la duración de la canción. 
 
 #+begin_src js
 db.tracks.aggregate([
@@ -632,7 +632,7 @@ db.tracks.aggregate([
 ]);
 #+end_src
 
-2. El segundo query es para encontrar cuántas canciones se lanzan cada mes. El resultado fue que diciembre fue el mes con más releases. Esto se hizo tomando solo aquellos documentos que tuvieran un string en su fecha de tamaño 10 para asegurarnos que tenían la fecha completa. Posteriormente se hace un casteo a fecha y se extrae el mes para luego hacer una agrupación y conteo sobre ellos.
+- El segundo query es para encontrar cuántas canciones se lanzan cada mes. El resultado fue que diciembre fue el mes con más releases. Esto se hizo tomando solo aquellos documentos que tuvieran un string en su fecha de tamaño 10 para asegurarnos que tenían la fecha completa. Posteriormente se hace un casteo a fecha y se extrae el mes para luego hacer una agrupación y conteo sobre ellos.
 
 #+begin_src js
 db.tracks.aggregate([
@@ -644,8 +644,10 @@ db.tracks.aggregate([
 ]);
 #+end_src
 
+- Por último, el siguiente query encuentra el promedio de followers que escucha cada género y lo ordena de manera descendiente. Lo que nos regresa es bastante curioso: el género que más se escucha es el de ~barbadian pop~ (¿qué *?&# es eso?).
+
 ** Monet
-1. El primer query nos ayuda a encontrar el promedio de popularidad de las canciones que se lanzan en cada mercado distinto. Se hace también una distinción entre si estas son explícitas o no. Al parecer las canciones explícitas tienden a ser menos populares que las que no lo son. Se hace un JOIN entre las tablas de album y de track sobre dos columnas y luego se agrupa sobre los mercados disponibles y si son explícitas o no.
+- El primer query nos ayuda a encontrar el promedio de popularidad de las canciones que se lanzan en cada mercado distinto. Se hace también una distinción entre si estas son explícitas o no. Al parecer las canciones explícitas tienden a ser menos populares que las que no lo son. Se hace un JOIN entre las tablas de album y de track sobre dos columnas y luego se agrupa sobre los mercados disponibles y si son explícitas o no.
 
 #+begin_src sql
 SELECT a.available_market, explicit,  AVG(popularity) as mean_pop, COUNT(popularity) as total_n
@@ -655,7 +657,7 @@ GROUP BY a.available_market, explicit
 ORDER BY a.available_market, explicit ASC;
 #+end_src
 
-2. Este query muestra cuales son los mercados con menos albumes a su vez de mostrar el promedio de canciones por mercado. Al parecer hay una relación entre el número de albums en un mercado y el promedio de sus canciones, donde es menor el promedio donde hay menos albumes.
+- Este query muestra cuales son los mercados con menos albumes a su vez de mostrar el promedio de canciones por mercado. Al parecer hay una relación entre el número de albums en un mercado y el promedio de sus canciones, donde es menor el promedio donde hay menos albumes.
 
 #+begin_src sql
 SELECT a.available_market, COUNT(*) as num_albums,
@@ -667,7 +669,7 @@ LIMIT 10;
 #+end_src
 
 ** Neo4j
-1. El primer query es para encontrar con quién han hecho colaboraciones los artistas y cuántos han sido. Curiosamente los primeros de la lista son raperos. Se hace un match entre aquellos artista que compartan álbumes en común (los singles también se consideran como su propio album) y luego nos aseguramos de que no sean ellos mismos para después regresar en una lista los resultados y el total de colaboradores.
+- El primer query es para encontrar con quién han hecho colaboraciones los artistas y cuántos han sido. Curiosamente los primeros de la lista son raperos. Se hace un match entre aquellos artista que compartan álbumes en común (los singles también se consideran como su propio album) y luego nos aseguramos de que no sean ellos mismos para después regresar en una lista los resultados y el total de colaboradores.
 
 #+begin_src cypher
 MATCH (ar1:Artist)<--(:Track)-->(:Album)<--(:Track)-->(ar2:Artist) 
@@ -677,7 +679,7 @@ RETURN artista, size(colaboraciones) AS total_colabs, colaboraciones
 ORDER BY total_colabs DESC;
 #+end_src
 
-2. A continuación estamos consultando las 10 canciones en las cuales colaboraron más artistas. También nos muestra la popularidasd de dicha canción, con el fin de relacionar el número de colaboraciones con la popularidad de la canción
+- A continuación estamos consultando las 10 canciones en las cuales colaboraron más artistas. También nos muestra la popularidasd de dicha canción, con el fin de relacionar el número de colaboraciones con la popularidad de la canción
 
 #+begin_src cypher
 MATCH (t:Track)<-[ta:TRACK_OF_ARTIST]->(a:Artist) 
