@@ -654,3 +654,14 @@ JOIN track t ON a.available_market = t.available_market AND a.album_id = t.album
 GROUP BY a.available_market, explicit
 ORDER BY a.available_market, explicit ASC;
 #+end_src
+
+** Neo4j
+1. El primer query es para encontrar con quién han hecho colaboraciones los artistas y cuántos han sido. Curiosamente los primeros de la lista son raperos. Se hace un match entre aquellos artista que compartan álbumes en común (los singles también se consideran como su propio album) y luego nos aseguramos de que no sean ellos mismos para después regresar en una lista los resultados y el total de colaboradores.
+
+#+begin_src cypher
+match (ar1:Artist)<--(:Track)-->(:Album)<--(:Track)-->(ar2:Artist) 
+where ar1.name <> ar2.name 
+with ar2.name as artista, collect(distinct(ar1.name)) as colaboraciones
+return artista, size(colaboraciones) as total_colabs, colaboraciones
+order by total_colabs desc;
+#+end_src
