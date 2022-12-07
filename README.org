@@ -646,7 +646,7 @@ db.tracks.aggregate([
 
 - Por último, el siguiente query encuentra el promedio de followers que escucha cada género y lo ordena de manera descendiente. Lo que nos regresa es bastante curioso: el género que más se escucha es el de ~barbadian pop~ (¿qué %*?&#"/$%! es eso?). Como podemos observar, parece ser un género bastante específico. Si corremos el comando ~db.artists.distinct("genres")~ en el shell de mongo nos regresa que existen un poco más de 546 géneros diferentes. Esto se debe a que este atributo en la API de Spotify es muy específica. Ya que podemos tener como géneros los siguientes casos: ~canadian hip hop~, ~canadian latin~, ~canadian metal~, ~canadian metalcore~, o inclusive ~speedrun~, ~minecraft~, ~water~ o ~sleep~, intentamos buscar la manera de hacer una agrupación de los datos con ayuda de expresiones regulares. El problema fue que no pudimos encontrar la manera de poder agrupar todos aquellos datos que contienen la palabra ~pop~, por ejemplo, en uno mismo. Lo más que pudimos hacer fue hacer un ~match~ con aquellos géneros que consideramos más relevantes. Si bien esto no quita el problema de que nos encontremos con un conteo del género ~texas latin rap~, pudimos "protegernos" de aquellos que ni parecen un género musical. El promedio se hace sobre los followers que tienen dichos artistas, entonces podríamos encontrar una relación bastante interesante entre la cantidad de géneros que puede interpretar un artista y cómo es que influye en el promedio, pero eso se dejará para otro proyecto xd.
 
-#+begin_src 
+#+begin_src js
 db.artists.aggregate([
     { $unwind : '$genres' },
     { $match: { genres: { $in: [/pop/,/rock/,/r&b/,/rap/,/electronic/,/hip hop/,/country/,/latin/,/indie/,/soul/,
