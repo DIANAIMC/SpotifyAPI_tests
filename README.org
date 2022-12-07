@@ -411,19 +411,6 @@ tracks_final = list(unique_everseen(tracks))
 
 ~Nota:~ Para que este código funcione, debe correrse junto al anterior y asegurarse que el contenedor de Mongo en Docker ya esté funcionando, lo cual el "main.sh" lo hace a través del siguiente script:
 
-#+begin_src py
-client = MongoClient('localhost', 27017)
-my_database = client.spotify
-my_collection1 = my_database.artists
-my_collection2 = my_database.albums
-my_collection3 = my_database.tracks
-
-my_collection1.insert_many(artistas_final)
-my_collection2.insert_many(albums_final)
-my_collection3.insert_many(tracks_final)
-#+end_src
-
-
 #+begin_src sh
 docker stop spotify 
 docker rm spotify 
@@ -443,6 +430,18 @@ docker exec -it spotify mongosh --quiet \
 --eval 'db.uw_albums.drop()' \
 --eval 'db.uw_tracks.drop()' \
 > /dev/null
+#+end_src
+
+#+begin_src py
+client = MongoClient('localhost', 27017)
+my_database = client.spotify
+my_collection1 = my_database.artists
+my_collection2 = my_database.albums
+my_collection3 = my_database.tracks
+
+my_collection1.insert_many(artistas_final)
+my_collection2.insert_many(albums_final)
+my_collection3.insert_many(tracks_final)
 #+end_src
 
 *Transformamos los datos*
