@@ -406,7 +406,7 @@ tracks_final = list(unique_everseen(tracks))
     
  Una vez hecho lo anterior, podemos insertar nuestros datos en Mongo.
  
-* Transfromación e incersión de datos
+* Transfromación e inserción de datos
 ** Mongo
 
 ~Nota:~ Para que este código funcione, debe correrse junto al anterior y asegurarse que el contenedor de Mongo en Docker ya esté funcionando, lo cual el "main.sh" lo hace a través del siguiente script:
