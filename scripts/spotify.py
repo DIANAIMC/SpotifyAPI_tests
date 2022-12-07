@@ -62,7 +62,7 @@ token_url = "https://accounts.spotify.com/api/token"
 
 access_token = get_access_token(client_id, client_secret, token_url)
 
-anio_inicio = 2018
+anio_inicio = 2022
 anio_fin = 2023
 
 inicio = time.time()
@@ -74,6 +74,7 @@ for year in range(anio_inicio, anio_fin):
     artistas = get_data(access_token, artistas, 1000, year, 'artist')
 # Limpiamos los artistas para que no haya repetidos
 artistas_final = list(unique_everseen(artistas))
+artists_dict = [album for album in artistas_final if isinstance(album, dict)]
 print(f'\nArtistas encontrados previo a limpieza: {len(artistas)}')
 print(f'Posterior a limpieza: {len(artistas_final)}')
 
@@ -84,6 +85,7 @@ for year in range(anio_inicio, anio_fin):
     albums = get_data(access_token, albums, 1000, year, 'album')
 # Limpiamos los albums para que no haya repetidos
 albums_final = list(unique_everseen(albums))
+albums_dict = [album for album in albums_final if isinstance(album, dict)]
 print(f'\nAlbums encontrados previo a limpieza: {len(albums)}')
 print(f'Posterior a limpieza: {len(albums_final)}')
 
@@ -94,6 +96,7 @@ for year in range(anio_inicio, anio_fin):
     tracks = get_data(access_token, tracks, 1000, year, 'track')
 # Limpiamos los tracks para que no haya repetidos
 tracks_final = list(unique_everseen(tracks))
+tracks_dict = [album for album in tracks_final if isinstance(album, dict)]
 print(f'\nTracks encontrados previo a limpieza: {len(tracks)}')
 print(f'Posterior a limpieza: {len(tracks_final)}')
 
@@ -114,8 +117,8 @@ my_collection1 = my_database.artists
 my_collection2 = my_database.albums
 my_collection3 = my_database.tracks
 print('Insertamos artistas\n')
-my_collection1.insert_many(artistas_final)
+my_collection1.insert_many(artists_dict)
 print('Insertamos albums\n')
-my_collection2.insert_many(albums_final)
+my_collection2.insert_many(albums_dict)
 print('Insertamos tracks\n')
-my_collection3.insert_many(tracks_final)
+my_collection3.insert_many(tracks_dict)
