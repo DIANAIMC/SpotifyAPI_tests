@@ -778,7 +778,7 @@ docker exec -t neo4jdb cypher-shell -u neo4j -p test 'MATCH (t:Track),(ar:Artist
 #+end_src
 
 * Queries analíticas
-**Mongo
+** Mongo
 1. El primer query sirve para observar si hay alguna relación entre la duración de la canción y la popularidad de la misma (la popularidad va de 0 a 100, este último la máxima popularidad). El output de esta consulta es el promedio de los promedios de la duración de las canciones por popularidad de las 10 popularidades con mayor duración en sus canciones (averageAvgTime), a su vez también regresa el promedio de dichas popularidades (averagePopularity). Por ejemplo: si averagePopularity está por arriba de 50, podemos notar decir que hay una relación positiva de la popularidad y la duración de la canción. 
 
 #+begin_src js
