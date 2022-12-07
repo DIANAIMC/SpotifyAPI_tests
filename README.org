@@ -645,3 +645,15 @@ db.tracks.aggregate([
    { $sort: { 'count': -1 } }
 ]);
 #+end_src
+
+** Monet
+1. El primer query nos ayuda a encontrar el promedio de popularidad de las canciones que se lanzan en cada mercado distinto. Se hace también una distinción entre si estas son explícitas o no. Al parecer las canciones explícitas tienden a ser menos populares que las que no lo son. Se hace un JOIN entre las tablas de album y de track sobre dos columnas y luego se agrupa sobre los mercados disponibles y si son explícitas o no.
+
+#+begin_src sql
+-- Encontrar el promedio de popularidad por mercado y dependiendo de si son explícitos o no
+SELECT a.available_market, explicit,  AVG(popularity) as mean_pop, COUNT(popularity) as total_n
+FROM album a
+JOIN track t ON a.available_market = t.available_market AND a.album_id = t.album_id
+GROUP BY a.available_market, explicit
+ORDER BY a.available_market, explicit ASC;
+#+end_src
