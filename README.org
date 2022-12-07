@@ -678,6 +678,18 @@ ORDER BY num_albums ASC, total_tracks ASC
 LIMIT 10;
 #+end_src
 
+- El último query para MonetDB se centra en encontrar el ~TOP 50~ de albums escuchados en el año de la pandemia: ~2020~. La intención era conocer cuáles de los albumes fueron los más populares en los momentos de ocio, preocupación e incertidumbre. Para obtener dicho TOP nos basamos en la popularidad que tienen los tracks de los mismos. Aquí también consideramos aquellos albumes que son singles (que tienen solamente 1 track).
+
+#+begin_src sql
+SELECT a.name, AVG(t.popularity) as avg_popularity_tracks
+FROM album a
+JOIN track t ON a.album_id = t.album_id
+WHERE SUBSTR(a.release_date, 1, 4) BETWEEN 2020 AND 2021
+GROUP BY a.name
+ORDER BY avg_popularity_tracks DESC
+LIMIT 50;
+#+end_src
+
 ** Neo4j
 - El primer query es para encontrar con quién han hecho colaboraciones los artistas y cuántos han sido. Curiosamente los primeros de la lista son raperos. Se hace un match entre aquellos artista que compartan álbumes en común (los singles también se consideran como su propio album) y luego nos aseguramos de que no sean ellos mismos para después regresar en una lista los resultados y el total de colaboradores.
 
