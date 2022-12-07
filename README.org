@@ -710,3 +710,16 @@ COUNT(DISTINCT a.name) as num_artists
 ORDER BY num_artists DESC
 LIMIT 10;
 #+end_src
+
+- Como último query quisimos presentar uno que nos pareció bastante curioso, aunque no encontramos los findings que queríamos. Este es un query para encontrar todas las canciones que tienen en su nombre la palabra ~Love~ y obtener la lista de colaboradores de dicha canción (si es que tiene). Se nos hizo bastante curioso conocer cuáles (y cuántas) canciones podrían estar relacionadas a este bello tema y es una pequeña aproximación a conocer de qué puede hablar la canción. Pudimos buscar cuáles llevaban en su nombre la palabra ~Hate~, ~Baby~ o incluso ~Money~. Al mismo tiempo intentamos buscar si estas canciones tenían colaboraciones, pero particularmente en la que presentamos no se encuentra ninguna. Tal vez nos pueden faltar más datos para conocer eso, pero nuestras computadoras no soportan tanto.
+
+#+begin_src cypher
+match (t:Track)<-[:TRACK_OF_ARTIST]->(a:Artist)
+where t.name contains "Love" and not t.name contains "feat"
+return distinct t.name as track_name, a.name as artist_name,
+CASE
+    WHEN size(collect(distinct(a.name))) > 1 THEN collect(distinct(a.name))
+    ELSE []
+END AS colab;
+#+end_src
+
