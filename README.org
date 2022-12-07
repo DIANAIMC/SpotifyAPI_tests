@@ -12,7 +12,7 @@ Proyecto Final: Bases de Datos No Relacionales
   A continuación explicaremos detalladamente el código por partes. Si se desea correr todo el proyecto, ejecute los siguientes comandos:
 
 #+begin_src sh
-./requirements.txt
+pip install -r requirements.txt
 ./main.sh
 #+end_src
 
@@ -21,7 +21,7 @@ Una vez, ejecutado, ya estarán extraídos e insertados todos los datos tanto en
 Si es que se prefiere correr los "cachos" de código con forme a la explicación, entonces hay que empezar haciendo este:
 
 #+begin_src sh
-./requirements.txt
+pip install -r requirements.txt
 
 CURRENT_DIR=$(pwd)
 
