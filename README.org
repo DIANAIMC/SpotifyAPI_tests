@@ -644,7 +644,7 @@ db.tracks.aggregate([
 ]);
 #+end_src
 
-- Por último, el siguiente query encuentra el promedio de followers que escucha cada género y lo ordena de manera descendiente. Lo que nos regresa es bastante curioso: el género que más se escucha es el de ~barbadian pop~ (¿qué *?&# es eso?).
+- Por último, el siguiente query encuentra el promedio de followers que escucha cada género y lo ordena de manera descendiente. Lo que nos regresa es bastante curioso: el género que más se escucha es el de ~barbadian pop~ (¿qué %*?&#"/$%! es eso?). 
 
 ** Monet
 - El primer query nos ayuda a encontrar el promedio de popularidad de las canciones que se lanzan en cada mercado distinto. Se hace también una distinción entre si estas son explícitas o no. Al parecer las canciones explícitas tienden a ser menos populares que las que no lo son. Se hace un JOIN entre las tablas de album y de track sobre dos columnas y luego se agrupa sobre los mercados disponibles y si son explícitas o no.
