@@ -56,8 +56,8 @@ def get_data(access_token, lista, limite, year, type):
             break
     return lista
 
-client_id = 'af1707ed062448f9aa96ffd1b36737ac'
-client_secret = '017e9f625cc149b8b1e11c69bd21ef1d'
+client_id = '' #agregar
+client_secret = '' #agregar
 token_url = "https://accounts.spotify.com/api/token"
 
 access_token = get_access_token(client_id, client_secret, token_url)
